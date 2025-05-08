@@ -9,7 +9,6 @@ import static io.github.libsdl4j.api.render.SdlRender.SDL_RenderFillRect;
 public class Criatura {
   public static final int CRIATURA_LARGURA = 50;
   public static final int CRIATURA_ALTURA = 50;
-  public static final int VEL = 10;
   private SDL_Rect collisionBox;
   private Integer velX, velY;
   private Integer posX, posY;
@@ -30,17 +29,22 @@ public class Criatura {
   }
 
   public void move(){
-      posX += velX;
-      collisionBox.x = posX;
-      if((posX<0)||(posX + CRIATURA_LARGURA <= Constantes.WINDOW_WIDTH)){
-        posX -= velX;
+      if(velY==0) velY = 1;
+      if(velX==0) velX = 1;
+
+      this.posX += velX;
+      this.collisionBox.x = this.posX;
+      if((posX<0)||(posX + CRIATURA_LARGURA >= Constantes.WINDOW_WIDTH)){
+        velX = -velX;
+        posX += velX;
         collisionBox.x = posX;
       }
 
-      posY += velY;
-      collisionBox.y = posY;
-      if((posY<0)||(posY + CRIATURA_ALTURA <= Constantes.WINDOW_HEIGHT)){
-        posY -= velY;
+      this.posY += velY;
+      this.collisionBox.y = this.posY;
+      if((posY<0)||(posY + CRIATURA_ALTURA >= Constantes.WINDOW_HEIGHT)){
+        velY = -velY;
+        posY += velY;
         collisionBox.y = posY;
       }
   }

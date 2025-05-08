@@ -4,7 +4,10 @@ import io.github.libsdl4j.api.event.SDL_Event;
 import io.github.libsdl4j.api.rect.SDL_Rect;
 import io.github.libsdl4j.api.render.SDL_Renderer;
 import io.github.libsdl4j.api.video.SDL_Window;
+import org.example.constants.Constantes;
 import org.example.criatura.Criatura;
+
+import java.util.Random;
 
 import static io.github.libsdl4j.api.Sdl.SDL_Init;
 import static io.github.libsdl4j.api.Sdl.SDL_Quit;
@@ -29,7 +32,7 @@ public class Main {
         }
 
         // Create and init the window
-        SDL_Window window = SDL_CreateWindow("Demo SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+        SDL_Window window = SDL_CreateWindow("Demo SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constantes.WINDOW_WIDTH, Constantes.WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
         if (window == null) {
             throw new IllegalStateException("Unable to create SDL window: " + SDL_GetError());
         }
@@ -49,7 +52,15 @@ public class Main {
         // Render the changes above ( which up until now had just happened behind the scenes )
         SDL_RenderPresent(renderer);
 
-        Criatura c = new Criatura(100,300,5,5);
+        Random random = new Random();
+        Criatura[] criaturas = new Criatura[5];
+        for(int i = 0; i < 5; i++) {
+            criaturas[i] = new Criatura(
+              random.nextInt(Constantes.WINDOW_WIDTH-Criatura.CRIATURA_LARGURA),
+              random.nextInt(Constantes.WINDOW_HEIGHT-Criatura.CRIATURA_ALTURA),
+              1,
+              1);
+        }
         // Start an event loop and react to events
         SDL_Event evt = new SDL_Event();
         boolean shouldRun = true;
@@ -71,7 +82,9 @@ public class Main {
                 }
             }
 
-            c.move();
+            for(Criatura criatura : criaturas) {
+                criatura.move();
+            }
 
             SDL_SetRenderDrawColor(renderer, (byte) 0, (byte) 0, (byte) 0, (byte) 255);
             SDL_RenderClear(renderer);
@@ -82,7 +95,9 @@ public class Main {
             SDL_SetRenderDrawColor(renderer, (byte) 255, (byte) 0, (byte) 0, (byte) 255);
             //SDL_RenderFillRect(renderer, rect);
 
-            c.render(renderer);
+            for(Criatura criatura : criaturas) {
+                criatura.render(renderer);
+            }
 
             SDL_RenderPresent(renderer);
         }
