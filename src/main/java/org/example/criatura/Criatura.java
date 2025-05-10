@@ -5,6 +5,7 @@ import io.github.libsdl4j.api.render.SDL_Renderer;
 import org.example.constants.Constantes;
 
 import static io.github.libsdl4j.api.render.SdlRender.SDL_RenderFillRect;
+import static io.github.libsdl4j.api.render.SdlRender.SDL_SetRenderDrawColor;
 
 public class Criatura {
   public static final int CRIATURA_LARGURA = 50;
@@ -12,21 +13,28 @@ public class Criatura {
   private SDL_Rect collisionBox;
   private Integer velX, velY;
   private Integer posX, posY;
+  private byte r, g, b, a;
 
 
-  public Criatura(int posX, int posY, int velX, int velY) {
-      collisionBox = new SDL_Rect();
-      collisionBox.h = CRIATURA_ALTURA;
-      collisionBox.w = CRIATURA_LARGURA;
-      this.posX = posX;
-      this.posY = posY;
-      this.velX = velX;
-      this.velY = velY;
-  }
+    public Criatura(int posX, int posY, int velX, int velY, byte r, byte g, byte b, byte a) {
+        collisionBox = new SDL_Rect();
+        collisionBox.h = CRIATURA_ALTURA;
+        collisionBox.w = CRIATURA_LARGURA;
+        this.posX = posX;
+        this.posY = posY;
+        this.velX = velX;
+        this.velY = velY;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
 
-  public void render(SDL_Renderer renderer){
-      SDL_RenderFillRect(renderer, collisionBox);
-  }
+
+    public void render(SDL_Renderer renderer){
+        SDL_SetRenderDrawColor(renderer, r, g, b, a);
+        SDL_RenderFillRect(renderer, collisionBox);
+    }
 
   public void move(){
       if(velY==0) velY = 1;

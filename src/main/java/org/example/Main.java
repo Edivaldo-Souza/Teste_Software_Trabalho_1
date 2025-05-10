@@ -54,13 +54,17 @@ public class Main {
 
         Random random = new Random();
         Criatura[] criaturas = new Criatura[5];
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
+            byte r = (byte) random.nextInt(256);
+            byte g = (byte) random.nextInt(256);
+            byte b = (byte) random.nextInt(256);
             criaturas[i] = new Criatura(
-              random.nextInt(Constantes.WINDOW_WIDTH-Criatura.CRIATURA_LARGURA),
-              random.nextInt(Constantes.WINDOW_HEIGHT-Criatura.CRIATURA_ALTURA),
-              1,
-              1);
+                    random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA),
+                    random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA),
+                    1, 1, r, g, b, (byte) 255
+            );
         }
+
         // Start an event loop and react to events
         SDL_Event evt = new SDL_Event();
         boolean shouldRun = true;
