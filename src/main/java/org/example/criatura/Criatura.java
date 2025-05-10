@@ -8,13 +8,14 @@ import static io.github.libsdl4j.api.render.SdlRender.SDL_RenderFillRect;
 import static io.github.libsdl4j.api.render.SdlRender.SDL_SetRenderDrawColor;
 
 public class Criatura {
-  public static final int CRIATURA_LARGURA = 50;
-  public static final int CRIATURA_ALTURA = 50;
-  private SDL_Rect collisionBox;
-  private Integer velX, velY;
-  private Integer posX, posY;
-  private byte r, g, b, a;
+    public static final int CRIATURA_LARGURA = 50;
+    public static final int CRIATURA_ALTURA = 50;
 
+    private SDL_Rect collisionBox;
+    private Integer velX, velY;
+    private Integer posX, posY;
+    private byte r, g, b, a;
+    private int valor;
 
     public Criatura(int posX, int posY, int velX, int velY, byte r, byte g, byte b, byte a) {
         collisionBox = new SDL_Rect();
@@ -28,35 +29,40 @@ public class Criatura {
         this.g = g;
         this.b = b;
         this.a = a;
+        this.valor = 1_000_000;
     }
-
 
     public void render(SDL_Renderer renderer){
         SDL_SetRenderDrawColor(renderer, r, g, b, a);
         SDL_RenderFillRect(renderer, collisionBox);
     }
 
-  public void move(){
-      if(velY==0) velY = 1;
-      if(velX==0) velX = 1;
+    public void move(){
+        if(velY==0) velY = 1;
+        if(velX==0) velX = 1;
 
-      this.posX += velX;
-      this.collisionBox.x = this.posX;
-      if((posX<0)||(posX + CRIATURA_LARGURA >= Constantes.WINDOW_WIDTH)){
-        velX = -velX;
-        posX += velX;
-        collisionBox.x = posX;
-      }
+        this.posX += velX;
+        this.collisionBox.x = this.posX;
+        if((posX<0)||(posX + CRIATURA_LARGURA >= Constantes.WINDOW_WIDTH)){
+            velX = -velX;
+            posX += velX;
+            collisionBox.x = posX;
+        }
 
-      this.posY += velY;
-      this.collisionBox.y = this.posY;
-      if((posY<0)||(posY + CRIATURA_ALTURA >= Constantes.WINDOW_HEIGHT)){
-        velY = -velY;
-        posY += velY;
-        collisionBox.y = posY;
-      }
-  }
+        this.posY += velY;
+        this.collisionBox.y = this.posY;
+        if((posY<0)||(posY + CRIATURA_ALTURA >= Constantes.WINDOW_HEIGHT)){
+            velY = -velY;
+            posY += velY;
+            collisionBox.y = posY;
+        }
+    }
 
+    public int getValor() {
+        return valor;
+    }
 
-
+    public void setValor(int valor) {
+        this.valor = valor;
+    }
 }
