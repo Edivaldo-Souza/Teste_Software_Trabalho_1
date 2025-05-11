@@ -38,25 +38,32 @@ public class Criatura {
         SDL_RenderFillRect(renderer, collisionBox);
     }
 
-    public void move(){
-        if(velY==0) velY = 1;
-        if(velX==0) velX = 1;
+    private boolean noChao = false;
+    private final float GRAVIDADE = 0.20f;       // menor gravidade = queda mais lenta
+    private final float FORCA_PULO = -15.5f;      // mais força de pulo = salto mais alto
+    private final float CHAO_Y = Constantes.WINDOW_HEIGHT - CRIATURA_ALTURA; // piso
 
-        this.posX += velX;
-        this.collisionBox.x = (int) this.posX;
-        if((posX<0)||(posX + CRIATURA_LARGURA >= Constantes.WINDOW_WIDTH)){
+    public void move() {
+        // Movimento horizontal constante
+        posX += velX;
+        collisionBox.x = (int) posX;
+
+        // Rebate nas bordas laterais
+        if (posX < 0 || posX + CRIATURA_LARGURA >= Constantes.WINDOW_WIDTH) {
             velX = -velX;
-            posX += velX;
-            collisionBox.x = (int) posX;
         }
 
-        this.posY += velY;
-        this.collisionBox.y = (int) this.posY;
-        if((posY<0)||(posY + CRIATURA_ALTURA >= Constantes.WINDOW_HEIGHT)){
-            velY = -velY;
-            posY += velY;
-            collisionBox.y = (int) posY;
+        // Gravidade
+        velY += GRAVIDADE;
+        posY += velY;
+
+        // Colisão com o chão
+        if (posY >= CHAO_Y) {
+            posY = CHAO_Y;
+            velY = FORCA_PULO; // faz a criatura "saltar" novamente
         }
+
+        collisionBox.y = (int) posY;
     }
 
     public int getValor() {

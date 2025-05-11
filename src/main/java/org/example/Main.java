@@ -18,6 +18,7 @@ import static io.github.libsdl4j.api.event.SdlEvents.SDL_PollEvent;
 import static io.github.libsdl4j.api.keycode.SDL_Keycode.SDLK_SPACE;
 import static io.github.libsdl4j.api.render.SDL_RendererFlags.SDL_RENDERER_ACCELERATED;
 import static io.github.libsdl4j.api.render.SdlRender.*;
+import static io.github.libsdl4j.api.timer.SdlTimer.SDL_Delay;
 import static io.github.libsdl4j.api.video.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
 import static io.github.libsdl4j.api.video.SDL_WindowFlags.SDL_WINDOW_SHOWN;
 import static io.github.libsdl4j.api.video.SdlVideo.SDL_CreateWindow;
@@ -51,7 +52,6 @@ public class Main {
 
         // Render the changes above ( which up until now had just happened behind the scenes )
         SDL_RenderPresent(renderer);
-
         Random random = new Random();
         Criatura[] criaturas = new Criatura[5];
         for (int i = 0; i < 5; i++) {
@@ -61,7 +61,7 @@ public class Main {
             criaturas[i] = new Criatura(
                     random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA),
                     random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA),
-                    0.3f, 0.3f, r, g, b, (byte) 255
+                    0.1f, 0.1f, r, g, b, (byte) 255
             );
         }
 
@@ -104,6 +104,8 @@ public class Main {
             }
 
             SDL_RenderPresent(renderer);
+            SDL_Delay(10);
+
         }
 
         SDL_Quit();
