@@ -51,8 +51,8 @@ public class Main {
         SDL_RenderPresent(renderer);
 
         Random random = new Random();
-        Criatura[] criaturas = new Criatura[5];
-        for (int i = 0; i < 5; i++) {
+        Criatura[] criaturas = new Criatura[CREATURES_AMOUNT];
+        for (int i = 0; i < CREATURES_AMOUNT; i++) {
             byte r = (byte) random.nextInt(256);
             byte g = (byte) random.nextInt(256);
             byte b = (byte) random.nextInt(256);
@@ -88,7 +88,7 @@ public class Main {
             }
 
             for(Criatura criatura: criaturas){
-                if(criatura.shouldMove)criatura.move();
+                criatura.move();
             }
 
             for(int i = 0; i < Constantes.CREATURES_AMOUNT; i++) {
@@ -118,6 +118,9 @@ public class Main {
                         criaturas[i].setVelY(criaturas[i].getVelY()-dot*dy);
                         criaturas[j].setVelX(criaturas[j].getVelX()+dot*dx);
                         criaturas[j].setVelY(criaturas[j].getVelY()+dot*dy);
+
+                        criaturas[i].shouldMove = false;
+                        criaturas[j].shouldMove = true;
                     }
                 }
             }
@@ -131,11 +134,11 @@ public class Main {
 
             SDL_RenderPresent(renderer);
 
-            //frameTime = SDL_GetTicks() - frameStart;
-            //if(Constantes.FRAME_DELAY > frameTime){
-             //   SDL_Delay(Constantes.FRAME_DELAY - frameTime);
-            //}
-            SDL_Delay(10);
+            frameTime = SDL_GetTicks() - frameStart;
+            if(Constantes.FRAME_DELAY > frameTime){
+               SDL_Delay(Constantes.FRAME_DELAY - frameTime);
+            }
+            //SDL_Delay(10);
 
         }
 

@@ -40,6 +40,7 @@ public class Criatura {
         this.g = g;
         this.b = b;
         this.a = a;
+        this.shouldMove = false;
         this.valor = 1_000_000;
     }
 
@@ -49,6 +50,8 @@ public class Criatura {
     private final float CHAO_Y = Constantes.WINDOW_HEIGHT - CRIATURA_ALTURA; // piso
 
     public void move() {
+        if(velX==0) velX=1;
+
         // Movimento horizontal constante
         posX += velX;
         collisionBox.x = (int) posX;
@@ -56,6 +59,8 @@ public class Criatura {
         // Rebate nas bordas laterais
         if (posX < 0 || posX + CRIATURA_LARGURA >= Constantes.WINDOW_WIDTH) {
             velX = -velX;
+            posX += velX;
+            collisionBox.x = (int) posX;
         }
 
         // Gravidade
@@ -87,19 +92,19 @@ public class Criatura {
         topB = rectB.y;
         bottomB = rectB.y + rectB.h;
 
-        if(bottomA <= topB){
+        if(bottomA <= topB+1){
             return false;
         }
 
-        if(topA >= bottomB){
+        if(topA >= bottomB+1){
             return false;
         }
 
-        if(rightA <= leftB){
+        if(rightA <= leftB+1){
             return false;
         }
 
-        if(leftA >= rightB){
+        if(leftA >= rightB+1){
             return false;
         }
 
