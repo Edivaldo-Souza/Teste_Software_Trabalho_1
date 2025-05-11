@@ -12,12 +12,13 @@ public class Criatura {
     public static final int CRIATURA_ALTURA = 50;
 
     private SDL_Rect collisionBox;
-    private Integer velX, velY;
-    private Integer posX, posY;
+    private float velX, velY;
+    private float posX, posY;
+
     private byte r, g, b, a;
     private int valor;
 
-    public Criatura(int posX, int posY, int velX, int velY, byte r, byte g, byte b, byte a) {
+    public Criatura(float posX, float posY, float velX, float velY, byte r, byte g, byte b, byte a) {
         collisionBox = new SDL_Rect();
         collisionBox.h = CRIATURA_ALTURA;
         collisionBox.w = CRIATURA_LARGURA;
@@ -42,19 +43,19 @@ public class Criatura {
         if(velX==0) velX = 1;
 
         this.posX += velX;
-        this.collisionBox.x = this.posX;
+        this.collisionBox.x = (int) this.posX;
         if((posX<0)||(posX + CRIATURA_LARGURA >= Constantes.WINDOW_WIDTH)){
             velX = -velX;
             posX += velX;
-            collisionBox.x = posX;
+            collisionBox.x = (int) posX;
         }
 
         this.posY += velY;
-        this.collisionBox.y = this.posY;
+        this.collisionBox.y = (int) this.posY;
         if((posY<0)||(posY + CRIATURA_ALTURA >= Constantes.WINDOW_HEIGHT)){
             velY = -velY;
             posY += velY;
-            collisionBox.y = posY;
+            collisionBox.y = (int) posY;
         }
     }
 

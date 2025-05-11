@@ -61,7 +61,7 @@ public class Main {
             criaturas[i] = new Criatura(
                     random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA),
                     random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA),
-                    1, 1, r, g, b, (byte) 255
+                    0.3f, 0.3f, r, g, b, (byte) 255
             );
         }
 
