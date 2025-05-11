@@ -50,30 +50,19 @@ public class Main {
 
         SDL_RenderPresent(renderer);
 
-        Map<Integer,Integer> coordenates = new HashMap<>();
-
         Random random = new Random();
-        Criatura[] criaturas = new Criatura[Constantes.CREATURES_AMOUNT];
-        for(int i = 0; i < Constantes.CREATURES_AMOUNT; i++) {
-            int posX = random.nextInt(WINDOW_WIDTH- CRIATURA_LARGURA);
-            int posY = random.nextInt(WINDOW_HEIGHT- CRIATURA_ALTURA);
-
-            if(coordenates.containsKey(posX) || coordenates.containsValue(posY)) {
-
-            }
-
+        Criatura[] criaturas = new Criatura[5];
+        for (int i = 0; i < 5; i++) {
+            byte r = (byte) random.nextInt(256);
+            byte g = (byte) random.nextInt(256);
+            byte b = (byte) random.nextInt(256);
             criaturas[i] = new Criatura(
-              random.nextInt(WINDOW_WIDTH- CRIATURA_LARGURA),
-              random.nextInt(Constantes.WINDOW_HEIGHT- CRIATURA_ALTURA),
-              1,
-              1,
-              TOTAL_COINS/CREATURES_AMOUNT);
-
-            
-
-            coordenates.put((int)criaturas[i].getPosX(), (int)criaturas[i].getPosY());
-
+                    random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA),
+                    random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA),
+                    0.1f, 0.1f, r, g, b, (byte) 255
+            );
         }
+
 
         for(Criatura criatura: criaturas){
             criatura.move();
@@ -81,7 +70,6 @@ public class Main {
 
         criaturas[0].shouldMove = true;
         int frameTime,frameStart;
-
 
         // Start an event loop and react to events
         SDL_Event evt = new SDL_Event();
@@ -143,10 +131,12 @@ public class Main {
 
             SDL_RenderPresent(renderer);
 
-            frameTime = SDL_GetTicks() - frameStart;
-            if(Constantes.FRAME_DELAY > frameTime){
-                SDL_Delay(Constantes.FRAME_DELAY - frameTime);
-            }
+            //frameTime = SDL_GetTicks() - frameStart;
+            //if(Constantes.FRAME_DELAY > frameTime){
+             //   SDL_Delay(Constantes.FRAME_DELAY - frameTime);
+            //}
+            SDL_Delay(10);
+
         }
 
         SDL_Quit();
