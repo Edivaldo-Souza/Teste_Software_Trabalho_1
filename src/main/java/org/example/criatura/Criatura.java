@@ -4,31 +4,34 @@ import io.github.libsdl4j.api.rect.SDL_Rect;
 import io.github.libsdl4j.api.render.SDL_Renderer;
 import org.example.constants.Constantes;
 
-import static io.github.libsdl4j.api.rect.SdlRect.SDL_HasIntersection;
-import static io.github.libsdl4j.api.render.SdlRender.SDL_RenderFillRect;
-import static io.github.libsdl4j.api.render.SdlRender.SDL_SetRenderDrawColor;
+import static io.github.libsdl4j.api.render.SdlRender.*;
 
 public class Criatura {
   public static final int CRIATURA_LARGURA = 50;
   public static final int CRIATURA_ALTURA = 50;
+  private static final int MIN_SPACE_BTW_BOXES = 0;
   private SDL_Rect collisionBox;
-  private boolean hasCollision;
+  public boolean hasCollision;
+  public boolean jumping;
   public boolean shouldMove;
   private float velX, velY;
   private float posX, posY;
   private byte r, g, b, a;
+  private double xi;
+  private double random;
   private int valor;
 
   public void render(SDL_Renderer renderer){
-      if(hasCollision){
-          SDL_SetRenderDrawColor(renderer, r,g,b,a);
+      SDL_SetRenderDrawColor(renderer, r,g,b,a);
+      if(!hasCollision){
+          SDL_RenderFillRect(renderer, collisionBox);
       }
-      else SDL_SetRenderDrawColor(renderer, r,g,b,a);
-      SDL_RenderFillRect(renderer, collisionBox);
-      hasCollision = false;
+      else{
+          SDL_RenderDrawRect(renderer,collisionBox);
+      }
   }
 
-    public Criatura(float posX, float posY, float velX, float velY, byte r, byte g, byte b, byte a) {
+    public Criatura(float posX, float posY, float velX, float velY, byte r, byte g, byte b, byte a, double random) {
         collisionBox = new SDL_Rect();
         collisionBox.h = CRIATURA_ALTURA;
         collisionBox.w = CRIATURA_LARGURA;
@@ -40,8 +43,20 @@ public class Criatura {
         this.g = g;
         this.b = b;
         this.a = a;
-        this.shouldMove = false;
+        this.hasCollision = false;
         this.valor = 1_000_000;
+        this.random = random;
+        this.xi = (posX*posY)/2 + this.random*this.valor;
+    }
+
+    public void receiveCoins(int coins) {
+        this.valor += coins;
+    }
+
+    public int giveCoins(){
+      this.valor /= 2;
+      this.xi = (posX*posY)/2 + this.random*this.valor;
+      return this.valor;
     }
 
     private boolean noChao = false;
@@ -50,7 +65,6 @@ public class Criatura {
     private final float CHAO_Y = Constantes.WINDOW_HEIGHT - CRIATURA_ALTURA; // piso
 
     public void move() {
-        if(velX==0) velX=1;
 
         // Movimento horizontal constante
         posX += velX;
@@ -74,6 +88,7 @@ public class Criatura {
         }
 
         collisionBox.y = (int) posY;
+
     }
 
     public boolean checkCollison(SDL_Rect rectA, SDL_Rect rectB) {
@@ -92,44 +107,23 @@ public class Criatura {
         topB = rectB.y;
         bottomB = rectB.y + rectB.h;
 
-        if(bottomA <= topB+1){
+        if(bottomA <= topB+MIN_SPACE_BTW_BOXES){
             return false;
         }
 
-        if(topA >= bottomB+1){
+        if(topA >= bottomB+MIN_SPACE_BTW_BOXES){
             return false;
         }
 
-        if(rightA <= leftB+1){
+        if(rightA <= leftB+MIN_SPACE_BTW_BOXES){
             return false;
         }
 
-        if(leftA >= rightB+1){
+        if(leftA >= rightB+MIN_SPACE_BTW_BOXES){
             return false;
         }
-
-        hasCollision = true;
 
         return true;
-    }
-
-    public void resolveCollision(Criatura otherCreature){
-      float dx = (this.collisionBox.x + CRIATURA_LARGURA/2F) - (otherCreature.collisionBox.x + CRIATURA_LARGURA/2F);
-      float dy = (this.collisionBox.y + CRIATURA_ALTURA/2F) - (otherCreature.collisionBox.y + CRIATURA_ALTURA/2F);
-      float distance = (float) Math.sqrt(dx*dx + dy*dy);
-      if(distance==0) return;
-
-      dx /= distance;
-      dy /= distance;
-
-      float vxRel = this.velX - otherCreature.velX;
-      float vyRel = this.velY - otherCreature.velY;
-
-      float dot = vxRel * dx + vyRel * dy;
-      this.velX -= dot*dx;
-      this.velY -= dot*dy;
-      otherCreature.velX += dot*dx;
-      otherCreature.velY += dot*dy;
     }
 
     public SDL_Rect getCollisionBox(){
@@ -158,6 +152,7 @@ public class Criatura {
 
     public void setPosY(float posY) {
         this.posY = posY;
+        this.collisionBox.y = (int) posY;
     }
 
     public float getPosX() {
@@ -166,6 +161,7 @@ public class Criatura {
 
     public void setPosX(float posX) {
         this.posX = posX;
+        this.collisionBox.x = (int) posX;
     }
 
     public int getValor() {

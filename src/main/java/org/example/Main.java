@@ -52,6 +52,8 @@ public class Main {
 
         Random random = new Random();
         Criatura[] criaturas = new Criatura[CREATURES_AMOUNT];
+
+        double randomNumber = random.nextDouble(-1,1);
         for (int i = 0; i < CREATURES_AMOUNT; i++) {
             byte r = (byte) random.nextInt(256);
             byte g = (byte) random.nextInt(256);
@@ -59,13 +61,29 @@ public class Main {
             criaturas[i] = new Criatura(
                     random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA),
                     random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA),
-                    0.1f, 0.1f, r, g, b, (byte) 255
+                    2f, 0.1f, r, g, b, (byte) 255,randomNumber
             );
+            if(i!=0){
+                boolean genNewCoordinates = true;
+                while (genNewCoordinates) {
+                    for(int j = 0; j<i; j++) {
+                        if(criaturas[i].checkCollison(criaturas[i].getCollisionBox(),criaturas[j].getCollisionBox())){
+                            genNewCoordinates = true;
+                            break;
+                        }
+                        genNewCoordinates = false;
+                    }
+                    if(genNewCoordinates){
+                        criaturas[i].setPosX(random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA));
+                        criaturas[i].setPosY(random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA));
+                    }
+                }
+            }
         }
-
 
         for(Criatura criatura: criaturas){
             criatura.move();
+            criatura.hasCollision = false;
         }
 
         criaturas[0].shouldMove = true;
@@ -93,14 +111,14 @@ public class Main {
 
             for(int i = 0; i < Constantes.CREATURES_AMOUNT; i++) {
                 for(int j = 0; j < Constantes.CREATURES_AMOUNT; j++) {
-                    if(i!=j &&
+                    if(i!=j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
                             criaturas[i]
                             .checkCollison(
                                     criaturas[i].getCollisionBox(),
                                     criaturas[j].getCollisionBox())) {
 
                         float dx = (criaturas[i].getCollisionBox().x + CRIATURA_LARGURA/2F)
-                                - (criaturas[j].getCollisionBox().y + CRIATURA_LARGURA/2F);
+                                - (criaturas[j].getCollisionBox().x + CRIATURA_LARGURA/2F);
                         float dy = (criaturas[i].getCollisionBox().y + CRIATURA_ALTURA/2F)
                                 - (criaturas[j].getCollisionBox().y + CRIATURA_ALTURA/2F);
 
@@ -119,8 +137,11 @@ public class Main {
                         criaturas[j].setVelX(criaturas[j].getVelX()+dot*dx);
                         criaturas[j].setVelY(criaturas[j].getVelY()+dot*dy);
 
-                        criaturas[i].shouldMove = false;
-                        criaturas[j].shouldMove = true;
+                        System.out.println("Criatura "+i+" roubou "+criaturas[j].getValor()/2+" da criatura "+j);
+                        criaturas[j].hasCollision = true;
+                        criaturas[i].receiveCoins(criaturas[j].giveCoins());
+
+                        break;
                     }
                 }
             }
