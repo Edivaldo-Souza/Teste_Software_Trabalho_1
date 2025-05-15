@@ -26,7 +26,6 @@ import static io.github.libsdl4j.api.video.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
 import static io.github.libsdl4j.api.video.SDL_WindowFlags.SDL_WINDOW_SHOWN;
 import static io.github.libsdl4j.api.video.SdlVideo.SDL_CreateWindow;
 import static io.github.libsdl4j.api.video.SdlVideoConst.SDL_WINDOWPOS_CENTERED;
-import static org.example.constants.Constantes.CREATURES_AMOUNT;
 import static org.example.constants.Constantes.WINDOW_WIDTH;
 import static org.example.criatura.Criatura.CRIATURA_ALTURA;
 import static org.example.criatura.Criatura.CRIATURA_LARGURA;
@@ -148,7 +147,7 @@ public class ProcessamentoCriaturas {
                         criaturas[j].setVelX(criaturas[j].getVelX()+dot*dx);
                         criaturas[j].setVelY(criaturas[j].getVelY()+dot*dy);
 
-                        System.out.println("Criatura "+i+" roubou "+criaturas[j].getValor()/2+" da criatura "+j);
+                        System.out.println("Criatura "+i+" roubou "+criaturas[j].getMoedas()/2+" moedas da criatura "+j);
                         criaturas[j].hasCollision = true;
                         criaturas[i].receiveCoins(criaturas[j].giveCoins());
                         notRobbedCreatures--;
@@ -185,9 +184,9 @@ public class ProcessamentoCriaturas {
         for(int i = 0; i < quantidadeCriaturas; i++) {
             stb.append(
                "Criatura "+i+" : x"+i+" <- "
-                   +dc.format(criaturas[i].getXi())+" + "
+                   +dc.format(criaturas[i].getLastXi())+" + "
                    +dc.format(criaturas[i].getRandom())+" * "
-                   +dc.format(criaturas[i].getValor())+" = "
+                   +dc.format(criaturas[i].getMoedas())+" = "
                    +dc.format(criaturas[i].getXi())+"\n");
         }
 

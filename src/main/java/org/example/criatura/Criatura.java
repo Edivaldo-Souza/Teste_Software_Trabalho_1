@@ -12,14 +12,14 @@ public class Criatura {
   private static final int MIN_SPACE_BTW_BOXES = 0;
   private SDL_Rect collisionBox;
   public boolean hasCollision;
-  public boolean jumping;
   public boolean shouldMove;
   private float velX, velY;
   private float posX, posY;
   private byte r, g, b, a;
   private double xi;
+  private double lastXi;
   private double random;
-  private int valor;
+  private int moedas;
 
   public void render(SDL_Renderer renderer){
       SDL_SetRenderDrawColor(renderer, r,g,b,a);
@@ -44,19 +44,22 @@ public class Criatura {
         this.b = b;
         this.a = a;
         this.hasCollision = false;
-        this.valor = 1_000_000;
+        this.moedas = 1_000_000;
         this.random = random;
-        this.xi = (posX+posY)/2 + this.random*this.valor;
+        this.xi = (posX+posY)/2 + this.random*this.moedas;
     }
 
     public void receiveCoins(int coins) {
-        this.valor += coins;
+        this.moedas += coins;
+        this.lastXi = this.xi;
+        this.xi += this.random+this.moedas;
     }
 
     public int giveCoins(){
-      this.valor /= 2;
-      this.xi += this.random*this.valor;
-      return this.valor;
+      this.moedas /= 2;
+      this.lastXi = this.xi;
+      this.xi += this.random*this.moedas;
+      return this.moedas;
     }
 
     private boolean noChao = false;
@@ -164,12 +167,12 @@ public class Criatura {
         this.collisionBox.x = (int) posX;
     }
 
-    public int getValor() {
-        return valor;
+    public int getMoedas() {
+        return moedas;
     }
 
-    public void setValor(int valor) {
-        this.valor = valor;
+    public double getLastXi(){
+        return lastXi;
     }
 
     public double getXi(){
