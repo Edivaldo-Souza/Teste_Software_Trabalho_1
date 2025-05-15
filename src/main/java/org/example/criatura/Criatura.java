@@ -46,7 +46,7 @@ public class Criatura {
         this.hasCollision = false;
         this.valor = 1_000_000;
         this.random = random;
-        this.xi = (posX*posY)/2 + this.random*this.valor;
+        this.xi = (posX+posY)/2 + this.random*this.valor;
     }
 
     public void receiveCoins(int coins) {
@@ -55,7 +55,7 @@ public class Criatura {
 
     public int giveCoins(){
       this.valor /= 2;
-      this.xi = (posX*posY)/2 + this.random*this.valor;
+      this.xi += this.random*this.valor;
       return this.valor;
     }
 
@@ -170,5 +170,13 @@ public class Criatura {
 
     public void setValor(int valor) {
         this.valor = valor;
+    }
+
+    public double getXi(){
+        return xi;
+    }
+
+    public double getRandom(){
+        return random;
     }
 }
