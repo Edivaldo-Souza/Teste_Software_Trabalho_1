@@ -33,6 +33,6 @@ import static org.example.criatura.Criatura.CRIATURA_LARGURA;
 
 public class Main {
     public static void main(String[] args) {
-        ProcessamentoCriaturas.processamento(20);
+        ProcessamentoCriaturas.processamento(5);
     }
 }
