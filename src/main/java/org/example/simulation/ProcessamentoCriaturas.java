@@ -31,28 +31,8 @@ import static org.example.criatura.Criatura.CRIATURA_ALTURA;
 import static org.example.criatura.Criatura.CRIATURA_LARGURA;
 
 public class ProcessamentoCriaturas {
-    public static int processamento(int quantidadeCriaturas){
-        // Initialize SDL
-        int result = SDL_Init(SDL_INIT_EVERYTHING);
-        if (result != 0) {
-            throw new IllegalStateException("Unable to initialize SDL library (Error code " + result + "): " + SDL_GetError());
-        }
-
-        SDL_Window window = SDL_CreateWindow("Criaturas Saltitantes", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, Constantes.WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-        if (window == null) {
-            throw new IllegalStateException("Unable to create SDL window: " + SDL_GetError());
-        }
-
-        SDL_Renderer renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        if (renderer == null) {
-            throw new IllegalStateException("Unable to create SDL renderer: " + SDL_GetError());
-        }
-
-        SDL_RenderClear(renderer);
-
-        SDL_RenderPresent(renderer);
-
-        if(quantidadeCriaturas == 1) {
+    public static int processamento(int quantidadeCriaturas) {
+        if (quantidadeCriaturas < 2) {
             SDL_ShowSimpleMessageBox(
                     SDL_MESSAGEBOX_INFORMATION,
                     "Info",
@@ -61,101 +41,121 @@ public class ProcessamentoCriaturas {
             return 0;
         }
 
-        Random random = new Random();
-        Criatura[] criaturas = new Criatura[quantidadeCriaturas];
+        initSDL();
 
-        double randomNumber = random.nextDouble(-1,1);
-        for (int i = 0; i < quantidadeCriaturas; i++) {
+        SDL_Window window = createWindow();
+        SDL_Renderer renderer = createRenderer(window);
+        Criatura[] criaturas = gerarCriaturas(quantidadeCriaturas);
+
+        int notRobbedCreatures = loopPrincipal(renderer, criaturas);
+
+        mostrarResultadosFinais(criaturas);
+
+        SDL_Quit();
+        return notRobbedCreatures;
+    }
+    private static void initSDL() {
+        int result = SDL_Init(SDL_INIT_EVERYTHING);
+        if (result != 0) {
+            throw new IllegalStateException("Erro ao inicializar SDL (Código " + result + "): " + SDL_GetError());
+        }
+    }
+
+    private static SDL_Window createWindow() {
+        SDL_Window window = SDL_CreateWindow("Criaturas Saltitantes", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                Constantes.WINDOW_WIDTH, Constantes.WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+        if (window == null) {
+            throw new IllegalStateException("Erro ao criar janela: " + SDL_GetError());
+        }
+        return window;
+    }
+
+    private static SDL_Renderer createRenderer(SDL_Window window) {
+        SDL_Renderer renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        if (renderer == null) {
+            throw new IllegalStateException("Erro ao criar renderizador: " + SDL_GetError());
+        }
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+        return renderer;
+    }
+
+    private static Criatura[] gerarCriaturas(int quantidade) {
+        Random random = new Random();
+        Criatura[] criaturas = new Criatura[quantidade];
+        double randomNumber = random.nextDouble(-1, 1);
+
+        for (int i = 0; i < quantidade; i++) {
             byte r = (byte) random.nextInt(256);
             byte g = (byte) random.nextInt(256);
             byte b = (byte) random.nextInt(256);
+
             criaturas[i] = new Criatura(
                     random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA),
                     random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA),
-                    2f, 0.1f, r, g, b, (byte) 255,randomNumber
-            );
-            if(i!=0){
-                boolean genNewCoordinates = true;
-                while (genNewCoordinates) {
-                    for(int j = 0; j<i; j++) {
-                        if(criaturas[i].checkCollison(criaturas[i].getCollisionBox(),criaturas[j].getCollisionBox())){
-                            genNewCoordinates = true;
-                            break;
-                        }
-                        genNewCoordinates = false;
-                    }
-                    if(genNewCoordinates){
-                        criaturas[i].setPosX(random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA));
-                        criaturas[i].setPosY(random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA));
-                    }
+                    2f, 0.1f, r, g, b, (byte) 255, randomNumber);
+
+            evitarSobreposicao(criaturas, i, random);
+        }
+
+        for (Criatura c : criaturas) {
+            c.move();
+            c.hasCollision = false;
+        }
+        criaturas[0].shouldMove = true;
+
+        return criaturas;
+    }
+
+    private static void evitarSobreposicao(Criatura[] criaturas, int i, Random random) {
+        if (i == 0) return;
+        boolean precisaNovaPosicao = true;
+
+        while (precisaNovaPosicao) {
+            precisaNovaPosicao = false;
+            for (int j = 0; j < i; j++) {
+                if (criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
+                    criaturas[i].setPosX(random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA));
+                    criaturas[i].setPosY(random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA));
+                    precisaNovaPosicao = true;
+                    break;
                 }
             }
         }
+    }
 
-        for(Criatura criatura: criaturas){
-            criatura.move();
-            criatura.hasCollision = false;
-        }
-
-        criaturas[0].shouldMove = true;
-        int frameTime,frameStart;
-        int notRobbedCreatures = quantidadeCriaturas;
-        // Start an event loop and react to events
+    private static int loopPrincipal(SDL_Renderer renderer, Criatura[] criaturas) {
         SDL_Event evt = new SDL_Event();
         boolean shouldRun = true;
+        int frameTime, frameStart;
+        int notRobbedCreatures = criaturas.length;
+
         while (shouldRun) {
             frameStart = SDL_GetTicks();
 
             while (SDL_PollEvent(evt) != 0) {
-                switch (evt.type) {
-                    case SDL_QUIT:
-                        shouldRun = false;
-                        break;
-                    default:
-                        break;
+                if (evt.type == SDL_QUIT) {
+                    shouldRun = false;
                 }
             }
 
-            for(Criatura criatura: criaturas){
-                criatura.move();
+            for (Criatura c : criaturas) {
+                c.move();
             }
 
-            for(int i = 0; i < quantidadeCriaturas; i++) {
-                for(int j = 0; j < quantidadeCriaturas; j++) {
-                    if(i!=j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
-                            criaturas[i]
-                                    .checkCollison(
-                                            criaturas[i].getCollisionBox(),
-                                            criaturas[j].getCollisionBox())) {
+            // Colisão e lógica de moedas
+            for (int i = 0; i < criaturas.length; i++) {
+                for (int j = 0; j < criaturas.length; j++) {
+                    if (i != j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
+                            criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
 
-                        float dx = (criaturas[i].getCollisionBox().x + CRIATURA_LARGURA/2F)
-                                - (criaturas[j].getCollisionBox().x + CRIATURA_LARGURA/2F);
-                        float dy = (criaturas[i].getCollisionBox().y + CRIATURA_ALTURA/2F)
-                                - (criaturas[j].getCollisionBox().y + CRIATURA_ALTURA/2F);
-
-                        float distance = (float) Math.sqrt(dx*dx + dy*dy);
-
-                        dx /= distance;
-                        dy /= distance;
-
-                        float vxRel = criaturas[i].getVelX() - criaturas[j].getVelX();
-                        float vyRel = criaturas[i].getVelY() - criaturas[j].getVelY();
-
-                        float dot = vxRel * dx + vyRel * dy;
-                        criaturas[i].setVelX(criaturas[i].getVelX()-dot*dx);
-                        criaturas[i].setVelY(criaturas[i].getVelY()-dot*dy);
-                        criaturas[j].setVelX(criaturas[j].getVelX()+dot*dx);
-                        criaturas[j].setVelY(criaturas[j].getVelY()+dot*dy);
-
-                        System.out.println("Criatura "+i+" roubou "+criaturas[j].getMoedas()/2+" moedas da criatura "+j);
-                        criaturas[j].hasCollision = true;
-                        criaturas[i].receiveCoins(criaturas[j].giveCoins());
+                        tratarColisao(criaturas, i, j);
                         notRobbedCreatures--;
-                        if(notRobbedCreatures==1){
+
+                        if (notRobbedCreatures == 1) {
                             SDL_Delay(1000);
                             shouldRun = false;
                         }
-
                         break;
                     }
                 }
@@ -163,35 +163,57 @@ public class ProcessamentoCriaturas {
 
             SDL_SetRenderDrawColor(renderer, (byte) 0, (byte) 0, (byte) 0, (byte) 255);
             SDL_RenderClear(renderer);
-
-            for(Criatura criatura : criaturas) {
-                criatura.render(renderer);
+            for (Criatura c : criaturas) {
+                c.render(renderer);
             }
-
             SDL_RenderPresent(renderer);
 
             frameTime = SDL_GetTicks() - frameStart;
-            if(Constantes.FRAME_DELAY > frameTime){
+            if (Constantes.FRAME_DELAY > frameTime) {
                 SDL_Delay(Constantes.FRAME_DELAY - frameTime);
             }
-            //SDL_Delay(10);
-
         }
+        return notRobbedCreatures;
+    }
 
+    private static void tratarColisao(Criatura[] criaturas, int i, int j) {
+        float dx = (criaturas[i].getCollisionBox().x + Criatura.CRIATURA_LARGURA / 2F)
+                - (criaturas[j].getCollisionBox().x + Criatura.CRIATURA_LARGURA / 2F);
+        float dy = (criaturas[i].getCollisionBox().y + Criatura.CRIATURA_ALTURA / 2F)
+                - (criaturas[j].getCollisionBox().y + Criatura.CRIATURA_ALTURA / 2F);
+
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+        dx /= distance;
+        dy /= distance;
+
+        float vxRel = criaturas[i].getVelX() - criaturas[j].getVelX();
+        float vyRel = criaturas[i].getVelY() - criaturas[j].getVelY();
+
+        float dot = vxRel * dx + vyRel * dy;
+
+        criaturas[i].setVelX(criaturas[i].getVelX() - dot * dx);
+        criaturas[i].setVelY(criaturas[i].getVelY() - dot * dy);
+        criaturas[j].setVelX(criaturas[j].getVelX() + dot * dx);
+        criaturas[j].setVelY(criaturas[j].getVelY() + dot * dy);
+
+        System.out.println("Criatura " + i + " roubou " + criaturas[j].getMoedas() / 2 + " moedas da criatura " + j);
+        criaturas[j].hasCollision = true;
+        criaturas[i].receiveCoins(criaturas[j].giveCoins());
+    }
+
+    private static void mostrarResultadosFinais(Criatura[] criaturas) {
         StringBuilder stb = new StringBuilder();
         DecimalFormat dc = new DecimalFormat("#.##");
         stb.append("Valores de xi finais das criaturas\n");
-        for(int i = 0; i < quantidadeCriaturas; i++) {
-            stb.append(
-               "Criatura "+i+" : x"+i+" <- "
-                   +dc.format(criaturas[i].getLastXi())+" + "
-                   +dc.format(criaturas[i].getRandom())+" * "
-                   +dc.format(criaturas[i].getMoedas())+" = "
-                   +dc.format(criaturas[i].getXi())+"\n");
+        for (int i = 0; i < criaturas.length; i++) {
+            stb.append("Criatura ").append(i).append(" : x").append(i).append(" <- ")
+                    .append(dc.format(criaturas[i].getLastXi())).append(" + ")
+                    .append(dc.format(criaturas[i].getRandom())).append(" * ")
+                    .append(dc.format(criaturas[i].getMoedas())).append(" = ")
+                    .append(dc.format(criaturas[i].getXi())).append("\n");
         }
 
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,"Info",stb.toString(),null);
-        SDL_Quit();
-        return notRobbedCreatures;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Info", stb.toString(), null);
     }
+
 }
