@@ -56,7 +56,7 @@ public class ProcessamentoCriaturas {
             SDL_ShowSimpleMessageBox(
                     SDL_MESSAGEBOX_INFORMATION,
                     "Info",
-                    "Quantidade de criaturas inferior a necessário. Mínimo: 2 criaturas",
+                    "Quantidade de criaturas inferior ao necessário. Mínimo: 2 criaturas",
                     null);
             return 0;
         }
