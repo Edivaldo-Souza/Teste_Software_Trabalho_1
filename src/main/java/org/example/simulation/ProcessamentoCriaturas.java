@@ -6,6 +6,7 @@ import io.github.libsdl4j.api.video.SDL_Window;
 import org.example.constants.Constantes;
 import org.example.criatura.Criatura;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Random;
 
@@ -31,7 +32,8 @@ import static org.example.criatura.Criatura.CRIATURA_ALTURA;
 import static org.example.criatura.Criatura.CRIATURA_LARGURA;
 
 public class ProcessamentoCriaturas {
-    public static int processamento(int quantidadeCriaturas) {
+
+    public static int processamento(int quantidadeCriaturas, int tempoExecucao) {
         if (quantidadeCriaturas < 2) {
             SDL_ShowSimpleMessageBox(
                     SDL_MESSAGEBOX_INFORMATION,
@@ -41,13 +43,24 @@ public class ProcessamentoCriaturas {
             return 0;
         }
 
+        /*if(tempoExecucao*1000<MIN_EXEC_TIME) {
+            SDL_ShowSimpleMessageBox(
+                    SDL_MESSAGEBOX_INFORMATION,
+                    "Info",
+                    "O tempo de execução informado é inferior ao necessário."+
+                        "\nO tempo de execução foi definido para 45 segundos",
+                    null
+            );
+            tempoExecucao = MIN_EXEC_TIME;
+        }*/
+
         initSDL();
 
         SDL_Window window = createWindow();
         SDL_Renderer renderer = createRenderer(window);
         Criatura[] criaturas = gerarCriaturas(quantidadeCriaturas);
 
-        int notRobbedCreatures = loopPrincipal(renderer, criaturas);
+        int notRobbedCreatures = loopPrincipal(renderer, criaturas,tempoExecucao);
 
         mostrarResultadosFinais(criaturas);
 
@@ -124,7 +137,7 @@ public class ProcessamentoCriaturas {
         }
     }
 
-    private static int loopPrincipal(SDL_Renderer renderer, Criatura[] criaturas) {
+    private static int loopPrincipal(SDL_Renderer renderer, Criatura[] criaturas,int tempoExecucao) {
         SDL_Event evt = new SDL_Event();
         boolean shouldRun = true;
         int frameTime, frameStart;
@@ -158,6 +171,14 @@ public class ProcessamentoCriaturas {
                         }
                         break;
                     }
+                }
+                if(SDL_GetTicks()>=tempoExecucao*1000){
+                    SDL_ShowSimpleMessageBox(
+                        SDL_MESSAGEBOX_INFORMATION,
+                        "Info",
+                        "Tempo de execução excedido",
+                        null);
+                    return 0;
                 }
             }
 
@@ -206,11 +227,13 @@ public class ProcessamentoCriaturas {
         DecimalFormat dc = new DecimalFormat("#.##");
         stb.append("Valores de xi finais das criaturas\n");
         for (int i = 0; i < criaturas.length; i++) {
-            stb.append("Criatura ").append(i).append(" : x").append(i).append(" <- ")
+            stb.append("Criatura ").append(i)
+                    .append("\n\tQuantidade de moedas: ").append(dc.format(criaturas[i].getMoedas())).append(";\n")
+                    .append("\tx").append(i).append(" <- ")
                     .append(dc.format(criaturas[i].getLastXi())).append(" + ")
                     .append(dc.format(criaturas[i].getRandom())).append(" * ")
                     .append(dc.format(criaturas[i].getMoedas())).append(" = ")
-                    .append(dc.format(criaturas[i].getXi())).append("\n");
+                    .append(dc.format(criaturas[i].getXi())).append("\n\n");
         }
 
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Info", stb.toString(), null);

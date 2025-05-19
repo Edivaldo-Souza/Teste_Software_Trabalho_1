@@ -6,20 +6,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TesteDominio {
+
     @Test
-    public void simpleCase(){
-        assertThat(ProcessamentoCriaturas.processamento(10)).isEqualTo(1);
+    public void casoSimples(){
+        assertThat(ProcessamentoCriaturas.processamento(50,60)).isEqualTo(1);
     }
 
     @Test
-    public void onlyTwoCreaturesCase(){
-        assertThat(ProcessamentoCriaturas.processamento(2)).isEqualTo(1);
+    public void casoApenasDuasCriaturas(){
+        assertThat(ProcessamentoCriaturas.processamento(2,60)).isEqualTo(1);
     }
 
     @Test
-    public void underTwoCreaturesCase(){
-        assertThat(ProcessamentoCriaturas.processamento(1)).isEqualTo(0);
+    public void casoMenosDeDuasCriaturas() {
+        assertThat(ProcessamentoCriaturas.processamento(1,60)).isEqualTo(0);
     }
+
+    @Test
+    public void casoMenorTempoDeExecucao() {
+        assertThat(ProcessamentoCriaturas.processamento(2, 1)).isEqualTo(0);
+    }
+
 
     @Test
     public void testReceberMoedasComValorValido() {

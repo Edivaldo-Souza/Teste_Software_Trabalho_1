@@ -149,17 +149,9 @@ public class Criatura {
         this.velY = velY;
     }
 
-    public float getPosY() {
-        return posY;
-    }
-
     public void setPosY(float posY) {
         this.posY = posY;
         this.collisionBox.y = (int) posY;
-    }
-
-    public float getPosX() {
-        return posX;
     }
 
     public void setPosX(float posX) {
