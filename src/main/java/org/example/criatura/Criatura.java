@@ -23,16 +23,9 @@ public class Criatura {
   private double random;
   private int moedas;
 
-  public void render(SDL_Renderer renderer){
-      SDL_SetRenderDrawColor(renderer, r,g,b,a);
-      if(!hasCollision){
-          SDL_RenderFillRect(renderer, collisionBox);
-      }
-      else{
-          SDL_RenderDrawRect(renderer,collisionBox);
-      }
-  }
+    public Criatura() {
 
+    }
     public Criatura(float posX, float posY, float velX, float velY, byte r, byte g, byte b, byte a, double random) {
         collisionBox = new SDL_Rect();
         collisionBox.h = CRIATURA_ALTURA;
@@ -50,6 +43,17 @@ public class Criatura {
         this.random = random;
         this.xi = (posX+posY)/2 + this.random*this.moedas;
     }
+    public void render(SDL_Renderer renderer){
+      SDL_SetRenderDrawColor(renderer, r,g,b,a);
+      if(!hasCollision){
+          SDL_RenderFillRect(renderer, collisionBox);
+      }
+      else{
+          SDL_RenderDrawRect(renderer,collisionBox);
+      }
+  }
+
+
 
     public void receiveCoins(int coins) {
         this.moedas += coins;
