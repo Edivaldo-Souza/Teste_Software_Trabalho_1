@@ -1,15 +1,16 @@
 import io.github.libsdl4j.api.rect.SDL_Rect;
-import org.example.constants.Constantes;
 import org.example.criatura.Criatura;
 import org.junit.jupiter.api.Test;
 
+import static org.example.criatura.Criatura.CRIATURA_LARGURA;
+import static org.example.simulation.ProcessamentoCriaturas.WINDOW_WIDTH;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TesteFronteira {
     @Test
     public void testMovimentoNaFronteiraDireita() {
-        Criatura criatura = new Criatura(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA - 1, 0, 2, 0, (byte)255, (byte)0, (byte)0, (byte)255, 1.0);
+        Criatura criatura = new Criatura(WINDOW_WIDTH - CRIATURA_LARGURA - 1, 0, 2, 0, (byte)255, (byte)0, (byte)0, (byte)255, 1.0);
         float velAntes = criatura.getVelX();
         criatura.move();
         assertTrue(criatura.getVelX() == -velAntes); // Deve inverter a direção ao bater na borda

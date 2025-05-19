@@ -9,7 +9,7 @@ public class TesteDominio {
 
     @Test
     public void casoSimples(){
-        assertThat(ProcessamentoCriaturas.processamento(50,60)).isEqualTo(1);
+        assertThat(ProcessamentoCriaturas.processamento(200,60)).isEqualTo(1);
     }
 
     @Test

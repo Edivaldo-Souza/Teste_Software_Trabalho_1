@@ -3,10 +3,8 @@ package org.example.simulation;
 import io.github.libsdl4j.api.event.SDL_Event;
 import io.github.libsdl4j.api.render.SDL_Renderer;
 import io.github.libsdl4j.api.video.SDL_Window;
-import org.example.constants.Constantes;
 import org.example.criatura.Criatura;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Random;
 
@@ -27,11 +25,13 @@ import static io.github.libsdl4j.api.video.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
 import static io.github.libsdl4j.api.video.SDL_WindowFlags.SDL_WINDOW_SHOWN;
 import static io.github.libsdl4j.api.video.SdlVideo.SDL_CreateWindow;
 import static io.github.libsdl4j.api.video.SdlVideoConst.SDL_WINDOWPOS_CENTERED;
-import static org.example.constants.Constantes.WINDOW_WIDTH;
-import static org.example.criatura.Criatura.CRIATURA_ALTURA;
-import static org.example.criatura.Criatura.CRIATURA_LARGURA;
 
 public class ProcessamentoCriaturas {
+
+    public static final int WINDOW_WIDTH = 1368;
+    public static final int WINDOW_HEIGHT = 768;
+    public static final int FPS = 60;
+    public static final int FRAME_DELAY = 1000/FPS;
 
     public static int processamento(int quantidadeCriaturas, int tempoExecucao) {
         if (quantidadeCriaturas < 2) {
@@ -76,7 +76,7 @@ public class ProcessamentoCriaturas {
 
     private static SDL_Window createWindow() {
         SDL_Window window = SDL_CreateWindow("Criaturas Saltitantes", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                Constantes.WINDOW_WIDTH, Constantes.WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+                WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
         if (window == null) {
             throw new IllegalStateException("Erro ao criar janela: " + SDL_GetError());
         }
@@ -104,8 +104,8 @@ public class ProcessamentoCriaturas {
             byte b = (byte) random.nextInt(256);
 
             criaturas[i] = new Criatura(
-                    random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA),
-                    random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA),
+                    random.nextInt(WINDOW_WIDTH - Criatura.CRIATURA_LARGURA),
+                    random.nextInt(WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA),
                     2f, 0.1f, r, g, b, (byte) 255, randomNumber);
 
             evitarSobreposicao(criaturas, i, random);
@@ -128,8 +128,8 @@ public class ProcessamentoCriaturas {
             precisaNovaPosicao = false;
             for (int j = 0; j < i; j++) {
                 if (criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
-                    criaturas[i].setPosX(random.nextInt(Constantes.WINDOW_WIDTH - Criatura.CRIATURA_LARGURA));
-                    criaturas[i].setPosY(random.nextInt(Constantes.WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA));
+                    criaturas[i].setPosX(random.nextInt(WINDOW_WIDTH - Criatura.CRIATURA_LARGURA));
+                    criaturas[i].setPosY(random.nextInt(WINDOW_HEIGHT - Criatura.CRIATURA_ALTURA));
                     precisaNovaPosicao = true;
                     break;
                 }
@@ -190,8 +190,8 @@ public class ProcessamentoCriaturas {
             SDL_RenderPresent(renderer);
 
             frameTime = SDL_GetTicks() - frameStart;
-            if (Constantes.FRAME_DELAY > frameTime) {
-                SDL_Delay(Constantes.FRAME_DELAY - frameTime);
+            if (FRAME_DELAY > frameTime) {
+                SDL_Delay(FRAME_DELAY - frameTime);
             }
         }
         return notRobbedCreatures;

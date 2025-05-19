@@ -2,9 +2,11 @@ package org.example.criatura;
 
 import io.github.libsdl4j.api.rect.SDL_Rect;
 import io.github.libsdl4j.api.render.SDL_Renderer;
-import org.example.constants.Constantes;
+
 
 import static io.github.libsdl4j.api.render.SdlRender.*;
+import static org.example.simulation.ProcessamentoCriaturas.WINDOW_HEIGHT;
+import static org.example.simulation.ProcessamentoCriaturas.WINDOW_WIDTH;
 
 public class Criatura {
   public static final int CRIATURA_LARGURA = 50;
@@ -65,7 +67,7 @@ public class Criatura {
     private boolean noChao = false;
     private final float GRAVIDADE = 0.20f;       // menor gravidade = queda mais lenta
     private final float FORCA_PULO = -15.5f;      // mais força de pulo = salto mais alto
-    private final float CHAO_Y = Constantes.WINDOW_HEIGHT - CRIATURA_ALTURA; // piso
+    private final float CHAO_Y = WINDOW_HEIGHT - CRIATURA_ALTURA; // piso
 
     public void move() {
 
@@ -74,7 +76,7 @@ public class Criatura {
         collisionBox.x = (int) posX;
 
         // Rebate nas bordas laterais
-        if (posX < 0 || posX + CRIATURA_LARGURA >= Constantes.WINDOW_WIDTH) {
+        if (posX < 0 || posX + CRIATURA_LARGURA >= WINDOW_WIDTH) {
             velX = -velX;
             posX += velX;
             collisionBox.x = (int) posX;
