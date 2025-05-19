@@ -120,7 +120,7 @@ public class ProcessamentoCriaturas {
         return criaturas;
     }
 
-    private static void evitarSobreposicao(Criatura[] criaturas, int i, Random random) {
+    public static void evitarSobreposicao(Criatura[] criaturas, int i, Random random) {
         if (i == 0) return;
         boolean precisaNovaPosicao = true;
 
