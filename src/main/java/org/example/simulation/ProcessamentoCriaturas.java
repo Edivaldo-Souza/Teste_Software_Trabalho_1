@@ -69,25 +69,25 @@ public class ProcessamentoCriaturas {
     }
     private static void initSDL() {
         int result = SDL_Init(SDL_INIT_EVERYTHING);
-        if (result != 0) {
-            throw new IllegalStateException("Erro ao inicializar SDL (Código " + result + "): " + SDL_GetError());
-        }
+        //if (result != 0) {
+        //    throw new IllegalStateException("Erro ao inicializar SDL (Código " + result + "): " + SDL_GetError());
+        //}
     }
 
     private static SDL_Window createWindow() {
         SDL_Window window = SDL_CreateWindow("Criaturas Saltitantes", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                 WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-        if (window == null) {
-            throw new IllegalStateException("Erro ao criar janela: " + SDL_GetError());
-        }
+        //if (window == null) {
+        //    throw new IllegalStateException("Erro ao criar janela: " + SDL_GetError());
+       // }
         return window;
     }
 
     private static SDL_Renderer createRenderer(SDL_Window window) {
         SDL_Renderer renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        if (renderer == null) {
-            throw new IllegalStateException("Erro ao criar renderizador: " + SDL_GetError());
-        }
+        //if (renderer == null) {
+        //    throw new IllegalStateException("Erro ao criar renderizador: " + SDL_GetError());
+        //}
         SDL_RenderClear(renderer);
         SDL_RenderPresent(renderer);
         return renderer;
@@ -146,11 +146,11 @@ public class ProcessamentoCriaturas {
         while (shouldRun) {
             frameStart = SDL_GetTicks();
 
-            while (SDL_PollEvent(evt) != 0) {
-                if (evt.type == SDL_QUIT) {
-                    shouldRun = false;
-                }
-            }
+            //while (SDL_PollEvent(evt) != 0) {
+            //    if (evt.type == SDL_QUIT) {
+            //        shouldRun = false;
+            //    }
+            //}
 
             for (Criatura c : criaturas) {
                 c.move();

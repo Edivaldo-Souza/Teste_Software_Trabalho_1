@@ -6,7 +6,7 @@ de criaturas saltitantes que roubam moedas entre si ao entrarem em contato.
 ## 📋 Sumário
 
 - [Descrição](#descrição)
-- [Funcionalidades](#funcionalidades)
+- [Testes](#Testes)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Autores](#autores)
 
@@ -19,7 +19,7 @@ testes de domínio, fronteira e estruturais. Os testes desenvolvidos avaliam a .
 Exemplo:
 > Um sistema web para gerenciamento de tarefas que permite criar,editar , marcar como concluída e excluir tarefas.
 
-## ✨ Funcionalidades
+## ✨ Testes
 
 - [x] Cadastro e login de usuários
 - [x] Criação e edição de dados

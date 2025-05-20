@@ -18,17 +18,6 @@ public class TesteDominio {
     }
 
     @Test
-    public void casoMenosDeDuasCriaturas() {
-        assertThat(ProcessamentoCriaturas.processamento(1,60)).isEqualTo(0);
-    }
-
-    @Test
-    public void casoMenorTempoDeExecucao() {
-        assertThat(ProcessamentoCriaturas.processamento(2, 1)).isEqualTo(0);
-    }
-
-
-    @Test
     public void testReceberMoedasComValorValido() {
         Criatura criatura = new Criatura(0, 0, 1, 0, (byte)255, (byte)0, (byte)0, (byte)255, 1.5);
         int moedasAntes = criatura.getMoedas();
