@@ -191,10 +191,10 @@ public class ProcessamentoCriaturas {
                 }
                 if(SDL_GetTicks()>=tempoExecucao*1000){
                     SDL_ShowSimpleMessageBox(
-                        SDL_MESSAGEBOX_INFORMATION,
-                        "Info",
-                        "Tempo de execução excedido",
-                        null);
+                            SDL_MESSAGEBOX_INFORMATION,
+                            "Info",
+                            "Tempo de execução excedido",
+                            null);
                     return 0;
                 }
             }
