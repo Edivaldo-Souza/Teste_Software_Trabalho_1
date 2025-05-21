@@ -7,19 +7,19 @@ import org.example.constants.Constantes;
 import static io.github.libsdl4j.api.render.SdlRender.*;
 
 public class Criatura {
-  public static final int CRIATURA_LARGURA = 50;
-  public static final int CRIATURA_ALTURA = 50;
-  private static final int MIN_SPACE_BTW_BOXES = 0;
-  private SDL_Rect collisionBox;
-  public boolean hasCollision;
-  public boolean shouldMove;
-  private float velX, velY;
-  private float posX, posY;
-  private byte r, g, b, a;
-  private double xi;
-  private double lastXi;
-  private double random;
-  private int moedas;
+    public static final int CRIATURA_LARGURA = 50;
+    public static final int CRIATURA_ALTURA = 50;
+    private static final int MIN_SPACE_BTW_BOXES = 0;
+    private SDL_Rect collisionBox;
+    public boolean hasCollision;
+    public boolean shouldMove;
+    private float velX, velY;
+    private float posX, posY;
+    private byte r, g, b, a;
+    private double xi;
+    private double lastXi;
+    private double random;
+    private int moedas;
 
     public Criatura() {
 
@@ -42,14 +42,14 @@ public class Criatura {
         this.xi = (posX+posY)/2 + this.random*this.moedas;
     }
     public void render(SDL_Renderer renderer){
-      SDL_SetRenderDrawColor(renderer, r,g,b,a);
-      if(!hasCollision){
-          SDL_RenderFillRect(renderer, collisionBox);
-      }
-      else{
-          SDL_RenderDrawRect(renderer,collisionBox);
-      }
-  }
+        SDL_SetRenderDrawColor(renderer, r,g,b,a);
+        if(!hasCollision){
+            SDL_RenderFillRect(renderer, collisionBox);
+        }
+        else{
+            SDL_RenderDrawRect(renderer,collisionBox);
+        }
+    }
 
 
 
@@ -60,10 +60,10 @@ public class Criatura {
     }
 
     public int giveCoins(){
-      this.moedas /= 2;
-      this.lastXi = this.xi;
-      this.xi += this.random*this.moedas;
-      return this.moedas;
+        this.moedas /= 2;
+        this.lastXi = this.xi;
+        this.xi += this.random*this.moedas;
+        return this.moedas;
     }
 
     private boolean noChao = false;
@@ -134,7 +134,7 @@ public class Criatura {
     }
 
     public SDL_Rect getCollisionBox(){
-      return this.collisionBox;
+        return this.collisionBox;
     }
 
     public float getVelX() {
