@@ -6,25 +6,53 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.criatura.Criatura.CRIATURA_LARGURA;
 import static org.example.simulation.ProcessamentoCriaturas.WINDOW_WIDTH;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TesteFronteira {
 
-    //Valor máximo para N é de 200 criaturas
+    //Caso de teste onde a quantidade de criaturas excede o valor máximo ( n <= 200 criaturas)
+    // O valor de N é redefinido para 200
     @Test
     public void casoMaisDe200Criaturas() {
-        assertThat(ProcessamentoCriaturas.processamento(300,60)).isEqualTo(0);
+        assertThat(ProcessamentoCriaturas.processamento(300,60)).isEqualTo(1);
     }
 
+    //Caso de teste onde a quantidade de criaturas é inferior ao valor mínimo ( n >= 2 criaturas)
     @Test
     public void casoMenosDeDuasCriaturas() {
         assertThat(ProcessamentoCriaturas.processamento(1,60)).isEqualTo(0);
     }
 
+    //Caso de teste onde o tempo de execução é inferior ao necessário para terminar uma simulação (1 segundo)
     @Test
     public void casoMenorTempoDeExecucao() {
         assertThat(ProcessamentoCriaturas.processamento(2, 1)).isEqualTo(0);
+    }
+
+    //Caso de teste onde o valor aleatório de R seja igual a 0;
+    @Test
+    public void casoValorDeRIgualAZero(){
+        int quantidadeCriaturas = 10;
+        assertTrue(
+                ProcessamentoCriaturas.gerarCriaturas(quantidadeCriaturas, 0)[0].getRandom() != 0,
+                "Mesmo passando como entrada o valor de r para ser igual a 0, " +
+                "o método gera um novo valor aletório para o mesmo");
+    }
+
+    public void casoNotRobbedCreaturesSejaNull(){
+
+    }
+
+    public void casoDx(){
+
+    }
+
+    public void casoDy(){
+
+    }
+
+    public void casoDistance(){
+
     }
 
     @Test

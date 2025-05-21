@@ -42,6 +42,14 @@ public class ProcessamentoCriaturas {
                     null);
             return 0;
         }
+        if (quantidadeCriaturas > 200) {
+            SDL_ShowSimpleMessageBox(
+                    SDL_MESSAGEBOX_INFORMATION,
+                    "Info",
+                    "Quantidade de criaturas acima do máximo. Máximo: 200 criaturas",
+                    null);
+            quantidadeCriaturas = 200;
+        }
 
         /*if(tempoExecucao*1000<MIN_EXEC_TIME) {
             SDL_ShowSimpleMessageBox(
@@ -58,7 +66,7 @@ public class ProcessamentoCriaturas {
 
         SDL_Window window = createWindow();
         SDL_Renderer renderer = createRenderer(window);
-        Criatura[] criaturas = gerarCriaturas(quantidadeCriaturas);
+        Criatura[] criaturas = gerarCriaturas(quantidadeCriaturas,0.99);
 
         int notRobbedCreatures = loopPrincipal(renderer, criaturas,tempoExecucao);
 
@@ -93,10 +101,19 @@ public class ProcessamentoCriaturas {
         return renderer;
     }
 
-    private static Criatura[] gerarCriaturas(int quantidade) {
+    public static Criatura[] gerarCriaturas(int quantidade, double randomNumberInput) {
         Random random = new Random();
         Criatura[] criaturas = new Criatura[quantidade];
-        double randomNumber = random.nextDouble(-1, 1);
+        double randomNumber = randomNumberInput;
+
+        boolean getAnotherRandomNumber = true;
+
+        while(getAnotherRandomNumber){
+            randomNumber = random.nextDouble(-1, 1);
+            if(randomNumber!=0){
+                getAnotherRandomNumber = false;
+            }
+        }
 
         for (int i = 0; i < quantidade; i++) {
             byte r = (byte) random.nextInt(256);

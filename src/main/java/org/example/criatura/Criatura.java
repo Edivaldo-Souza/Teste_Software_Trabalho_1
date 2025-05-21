@@ -41,7 +41,7 @@ public class Criatura {
         this.hasCollision = false;
         this.moedas = 1_000_000;
         this.random = random;
-        this.xi = (posX+posY)/2 + this.random*this.moedas;
+        this.xi = this.random*this.moedas;
     }
     public void render(SDL_Renderer renderer){
       SDL_SetRenderDrawColor(renderer, r,g,b,a);
@@ -52,8 +52,6 @@ public class Criatura {
           SDL_RenderDrawRect(renderer,collisionBox);
       }
   }
-
-
 
     public void receiveCoins(int coins) {
         this.moedas += coins;
