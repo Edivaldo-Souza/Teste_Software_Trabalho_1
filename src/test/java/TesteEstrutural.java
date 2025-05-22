@@ -24,7 +24,7 @@ public class TesteEstrutural {
     @Test
     public void testQuantidadeCriaturasMenorIgualQue200() {
         int resultado = ProcessamentoCriaturas.processamento(200, 100);
-        assertEquals(0, resultado, "Deve retornar 1 quando a quantidade de criaturas for menor ou igual que 200");
+        assertEquals(1, resultado, "Deve retornar 1 quando a quantidade de criaturas for menor ou igual que 200");
     }
 
     @Test
@@ -118,6 +118,91 @@ public class TesteEstrutural {
         Criatura criatura = new Criatura();
         assertFalse(criatura.checkCollison(rectA, rectB));
     }
+
+    @Test
+    public void testVerificarSeCriaturaDeveRoubarQuandoIigualJ() {
+        Criatura[] criaturas = new Criatura[1];
+        criaturas[0] = new Criatura();
+        boolean criaturaDeveRoubar = false;
+
+        // i sempre será igual a j
+        for (int i = 0; i < criaturas.length; i++) {
+            for (int j = 0; j < criaturas.length; j++) {
+                if (i != j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
+                        criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
+                    criaturaDeveRoubar = true;
+                }
+            }
+        }
+        assertFalse(criaturaDeveRoubar);
+    }
+
+    @Test
+    public void testVerificarSeCriaturaDeveRoubarQuandoPrimeiraCriaturaJaColidiu() {
+        Criatura[] criaturas = new Criatura[2];
+        criaturas[0] = new Criatura();
+        //Caso a primeira criatura que colida já esteja com status de que já colidiu antes
+        criaturas[0].hasCollision = true;
+        criaturas[1] = new Criatura();
+        boolean criaturaDeveRoubar = false;
+
+        for (int i = 0; i < criaturas.length; i++) {
+            for (int j = 0; j < criaturas.length; j++) {
+                if (i != j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
+                        criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
+                    criaturaDeveRoubar = true;
+                }
+            }
+        }
+        assertFalse(criaturaDeveRoubar);
+    }
+
+    @Test
+    public void testVerificarSeCriaturaDeveRoubarQuandoSegundaCriaturaJaColidiu() {
+        Criatura[] criaturas = new Criatura[2];
+        criaturas[0] = new Criatura();
+        criaturas[1] = new Criatura();
+        //Caso a segunda criatura que colida já esteja com status de que já colidiu antes
+        criaturas[1].hasCollision = true;
+        boolean criaturaDeveRoubar = false;
+
+        for (int i = 0; i < criaturas.length; i++) {
+            for (int j = 0; j < criaturas.length; j++) {
+                if (i != j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
+                        criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
+                    criaturaDeveRoubar = true;
+                }
+            }
+        }
+        assertFalse(criaturaDeveRoubar);
+    }
+
+    @Test
+    public void testVerificarSeCriaturaDeveRoubarQuandoNaoHaColisaoEntreCriatuas() {
+        Criatura[] criaturas = new Criatura[2];
+        criaturas[0] = new Criatura();
+        criaturas[1] = new Criatura();
+
+        //Caso as criaturas não estejam em posição de colidir
+        criaturas[0].setPosX(100); criaturas[0].setPosY(100);
+        criaturas[0].getCollisionBox().w = 50; criaturas[0].getCollisionBox().h = 50;
+        criaturas[1].setPosX(200); criaturas[1].setPosY(200);
+        criaturas[1].getCollisionBox().w = 50; criaturas[1].getCollisionBox().h = 50;
+        criaturas[1].hasCollision = true;
+        boolean criaturaDeveRoubar = false;
+
+
+        for (int i = 0; i < criaturas.length; i++) {
+            for (int j = 0; j < criaturas.length; j++) {
+                if (i != j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
+                        criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
+                    criaturaDeveRoubar = true;
+                }
+            }
+        }
+        assertFalse(criaturaDeveRoubar);
+    }
+
 
 }
 
