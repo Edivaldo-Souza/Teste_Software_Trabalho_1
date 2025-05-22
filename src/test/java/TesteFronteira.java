@@ -39,22 +39,6 @@ public class TesteFronteira {
                 "o método gera um novo valor aletório para o mesmo");
     }
 
-    public void casoNotRobbedCreaturesSejaNull(){
-
-    }
-
-    public void casoDx(){
-
-    }
-
-    public void casoDy(){
-
-    }
-
-    public void casoDistance(){
-
-    }
-
     @Test
     public void testMovimentoNaFronteiraDireita() {
         Criatura criatura = new Criatura(WINDOW_WIDTH - CRIATURA_LARGURA - 1, 0, 2, 0, (byte)255, (byte)0, (byte)0, (byte)255, 1.0);
