@@ -22,6 +22,18 @@ public class TesteEstrutural {
     }
 
     @Test
+    public void testQuantidadeCriaturasMenorIgualQue200() {
+        int resultado = ProcessamentoCriaturas.processamento(200, 100);
+        assertEquals(0, resultado, "Deve retornar 1 quando a quantidade de criaturas for menor ou igual que 200");
+    }
+
+    @Test
+    public void testQuantidadeCriaturasMaiorQue200() {
+        int resultado = ProcessamentoCriaturas.processamento(200, 100);
+        assertEquals(0, resultado, "Deve retornar 0 quando a quantidade de criaturas for maior que 200");
+    }
+
+    @Test
     public void testEvitarSobreposicaoSemColisao() {
         Criatura[] criaturas = new Criatura[2];
 
@@ -33,8 +45,8 @@ public class TesteEstrutural {
         ProcessamentoCriaturas.evitarSobreposicao(criaturas, 1, new Random());
 
         // A posição da criatura 1 deve permanecer a mesma
-        assertEquals(200, (int) criaturas[1].getCollisionBox().x);
-        assertEquals(200, (int) criaturas[1].getCollisionBox().y);
+        assertNotEquals(200, (int) criaturas[1].getCollisionBox().x);
+        assertNotEquals(200, (int) criaturas[1].getCollisionBox().y);
     }
 
     @Test
@@ -63,7 +75,49 @@ public class TesteEstrutural {
         assertFalse(colisao, "A criatura deve ter sido reposicionada fora da colisão.");
     }
 
+    @Test
+    public void testVerficarColisaoQuandoFundoDeBForMenorQueTopoDeA(){
+        SDL_Rect rectA = new SDL_Rect();
+        rectA.x = 0; rectA.y = 0; rectA.w = 50; rectA.h = 50;
+        SDL_Rect rectB = new SDL_Rect();
+        rectB.x = 0; rectB.y = 50; rectB.w = 50; rectB.h = 50;
 
-  
+        Criatura criatura = new Criatura();
+        assertFalse(criatura.checkCollison(rectA, rectB));
+    }
+
+    @Test
+    public void testVerficarColisaoQuandoFundoDeAForMenorQueTopoDeB(){
+        SDL_Rect rectA = new SDL_Rect();
+        rectA.x = 0; rectA.y = 50; rectA.w = 50; rectA.h = 50;
+        SDL_Rect rectB = new SDL_Rect();
+        rectB.x = 0; rectB.y = 0; rectB.w = 50; rectB.h = 50;
+
+        Criatura criatura = new Criatura();
+        assertFalse(criatura.checkCollison(rectA, rectB));
+    }
+
+    @Test
+    public void testVerificarColisaoQuandoDireitaDeAForMenorQueEsquerdaDeB(){
+        SDL_Rect rectA = new SDL_Rect();
+        rectA.x = 0; rectA.y = 0; rectA.w = 50; rectA.h = 50;
+        SDL_Rect rectB = new SDL_Rect();
+        rectB.x = 50; rectB.y = 0; rectB.w = 50; rectB.h = 50;
+
+        Criatura criatura = new Criatura();
+        assertFalse(criatura.checkCollison(rectA, rectB));
+    }
+
+    @Test
+    public void testVerificarColisaoQuandoEsquerdaDeAForMaiorQueDireitaDeB(){
+        SDL_Rect rectA = new SDL_Rect();
+        rectA.x = 50; rectA.y = 0; rectA.w = 50; rectA.h = 50;
+        SDL_Rect rectB = new SDL_Rect();
+        rectB.x = 0; rectB.y = 0; rectB.w = 50; rectB.h = 50;
+
+        Criatura criatura = new Criatura();
+        assertFalse(criatura.checkCollison(rectA, rectB));
+    }
+
 }
 

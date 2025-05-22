@@ -13,17 +13,20 @@ public class TesteDominio {
     }
 
     @Test
-    public void casoApenasDuasCriaturas(){
-        assertThat(ProcessamentoCriaturas.processamento(2,60)).isEqualTo(1);
-    }
-
-    @Test
     public void testReceberMoedasComValorValido() {
-        Criatura criatura = new Criatura(0, 0, 1, 0, (byte)255, (byte)0, (byte)0, (byte)255, 1.5);
+        Criatura criatura = new Criatura(0, 0, 1, 0, (byte)255, (byte)0, (byte)0, (byte)255, 0.5);
         int moedasAntes = criatura.getMoedas();
         criatura.receiveCoins(500);
         assertEquals(moedasAntes + 500, criatura.getMoedas());
         assertTrue(criatura.getXi() > criatura.getLastXi()); // Verifica o domínio da lógica de xi
+    }
+
+    @Test
+    public void testPerderMoedasComValorValido() {
+        Criatura criatura = new Criatura(0, 0, 1, 0, (byte)255, (byte)0, (byte)0, (byte)255, 0.5);
+        int moedasAntes = criatura.getMoedas();
+        criatura.giveCoins();
+        assertEquals(moedasAntes - moedasAntes/2, criatura.getMoedas());
     }
 
 }

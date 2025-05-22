@@ -23,6 +23,12 @@ public class TesteFronteira {
         assertThat(ProcessamentoCriaturas.processamento(1,60)).isEqualTo(0);
     }
 
+    // Caso de teste onde a quantidade de criaturas é igual mínimo possível (2 criaturas)
+    @Test
+    public void casoApenasDuasCriaturas(){
+        assertThat(ProcessamentoCriaturas.processamento(2,60)).isEqualTo(1);
+    }
+
     //Caso de teste onde o tempo de execução é inferior ao necessário para terminar uma simulação (1 segundo)
     @Test
     public void casoMenorTempoDeExecucao() {

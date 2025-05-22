@@ -48,19 +48,8 @@ public class ProcessamentoCriaturas {
                     "Info",
                     "Quantidade de criaturas acima do máximo. Máximo: 200 criaturas",
                     null);
-            quantidadeCriaturas = 200;
+            return 0;
         }
-
-        /*if(tempoExecucao*1000<MIN_EXEC_TIME) {
-            SDL_ShowSimpleMessageBox(
-                    SDL_MESSAGEBOX_INFORMATION,
-                    "Info",
-                    "O tempo de execução informado é inferior ao necessário."+
-                        "\nO tempo de execução foi definido para 45 segundos",
-                    null
-            );
-            tempoExecucao = MIN_EXEC_TIME;
-        }*/
 
         initSDL();
 
@@ -77,25 +66,19 @@ public class ProcessamentoCriaturas {
     }
     private static void initSDL() {
         int result = SDL_Init(SDL_INIT_EVERYTHING);
-        //if (result != 0) {
-        //    throw new IllegalStateException("Erro ao inicializar SDL (Código " + result + "): " + SDL_GetError());
-        //}
+
     }
 
     private static SDL_Window createWindow() {
         SDL_Window window = SDL_CreateWindow("Criaturas Saltitantes", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                 WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-        //if (window == null) {
-        //    throw new IllegalStateException("Erro ao criar janela: " + SDL_GetError());
-       // }
+
         return window;
     }
 
     private static SDL_Renderer createRenderer(SDL_Window window) {
         SDL_Renderer renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        //if (renderer == null) {
-        //    throw new IllegalStateException("Erro ao criar renderizador: " + SDL_GetError());
-        //}
+
         SDL_RenderClear(renderer);
         SDL_RenderPresent(renderer);
         return renderer;
@@ -155,7 +138,6 @@ public class ProcessamentoCriaturas {
     }
 
     private static int loopPrincipal(SDL_Renderer renderer, Criatura[] criaturas,int tempoExecucao) {
-        SDL_Event evt = new SDL_Event();
         boolean shouldRun = true;
         int frameTime, frameStart;
         int notRobbedCreatures = criaturas.length;
@@ -163,11 +145,6 @@ public class ProcessamentoCriaturas {
         while (shouldRun) {
             frameStart = SDL_GetTicks();
 
-            //while (SDL_PollEvent(evt) != 0) {
-            //    if (evt.type == SDL_QUIT) {
-            //        shouldRun = false;
-            //    }
-            //}
 
             for (Criatura c : criaturas) {
                 c.move();

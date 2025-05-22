@@ -8,7 +8,7 @@ de criaturas saltitantes que roubam moedas entre si ao entrarem em contato.
 - [Descrição](#descrição)
 - [Testes](#Testes)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Autores](#autores)
+- [Como_utilizar](#Como utilizar)
 
 ## 📖 Descrição
 
@@ -50,15 +50,8 @@ public void casoSimples(){
 }
 ```
 
-- Caso de testes com duas criaturas: Execução da simulação com a presença de apenas
-duas criaturas.
-```java
-public void casoApenasDuasCriaturas(){
-    assertThat(ProcessamentoCriaturas.processamento(2,60)).isEqualTo(1);
-}
-```
-
-- Caso de Validação do Cálculo de Xi
+- Caso de teste para a criatura que rouba: Esse teste verifica se a quantidade de
+moedas que a criatura rouba é somada ao seu respectivo total de moedas;
 ```java
 public void testReceberMoedasComValorValido() {
         Criatura criatura = new Criatura(0, 0, 1, 0, (byte)255, (byte)0, (byte)0, (byte)255, 1.5);
@@ -69,8 +62,166 @@ public void testReceberMoedasComValorValido() {
     }
 ```
 
+- Caso de teste para criatura roubada: Esse teste verifica se a quantidade de moedas de uma
+criatura após ser roubada é igual a metade da quantidade de moedas que a criatura
+possuia antes de ser roubada;
+```java
+public void testPerderMoedasComValorValido() {
+        Criatura criatura = new Criatura(0, 0, 1, 0, (byte)255, (byte)0, (byte)0, (byte)255, 0.5);
+        int moedasAntes = criatura.getMoedas();
+        criatura.giveCoins();
+        assertEquals(moedasAntes - moedasAntes/2, criatura.getMoedas());
+    }
+```
+
+### Testes de Fronteira
+
+- Caso de teste com mais de 200 criaturas: Teste para o caso do valor de
+N (número de criaturas) estiver acima do limite de 200 criaturas.
+```java
+public void casoMaisDe200Criaturas() {
+    assertThat(ProcessamentoCriaturas.processamento(300,60)).isEqualTo(1);
+}
+```
+
+- Caso de teste com menos de 2 criaturas: Teste para o caso do valor de
+  N (número de criaturas) estiver abaixo do mínimo de 2 criaturas.
+```java
+public void casoMenosDeDuasCriaturas() {
+    assertThat(ProcessamentoCriaturas.processamento(1,60)).isEqualTo(0);
+}
+```
+
+- Caso de testes com duas criaturas: Execução da simulação com a presença de apenas
+  duas criaturas.
+```java
+public void casoApenasDuasCriaturas(){
+    assertThat(ProcessamentoCriaturas.processamento(2,60)).isEqualTo(1);
+}
+```
+
+- Caso de teste com pouco tempo de execução: Teste para o caso do valor
+do tempo de execução ser muito baixo para terminar uma simulação
+  (1 segundo).
+```java
+public void casoMenorTempoDeExecucao() {
+    assertThat(ProcessamentoCriaturas.processamento(2, 1)).isEqualTo(0);
+}
+```
+- Caso o valor aleatório R for igual a zero: Teste que atribuí o valor de zero
+para a variável R e verifica seu tratamento para que o valor seja alterado.
+```java
+public void casoValorDeRIgualAZero(){
+        int quantidadeCriaturas = 10;
+        assertTrue(
+                ProcessamentoCriaturas.gerarCriaturas(quantidadeCriaturas, 0)[0].getRandom() != 0,
+                "Mesmo passando como entrada o valor de r para ser igual a 0, " +
+                "o método gera um novo valor aletório para o mesmo");
+    }
+```
+
+- Caso criatura atinga o limite da tela: Teste que verifica se o sentido da
+do deslocamento da criatura se inverte ao entrar em contato com o limite
+da tela.
+```java
+public void testMovimentoNaFronteiraDireita() {
+        Criatura criatura = new Criatura(WINDOW_WIDTH - CRIATURA_LARGURA - 1, 0, 2, 0, (byte)255, (byte)0, (byte)0, (byte)255, 1.0);
+        float velAntes = criatura.getVelX();
+        criatura.move();
+        assertTrue(criatura.getVelX() == -velAntes); // Deve inverter a direção ao bater na borda
+    }
+```
+
+- Caso de colisão em mesma posição:  
+
+```java
+public void testColisaoNoLimite() {
+        SDL_Rect a = new SDL_Rect();
+        a.x = 0; a.y = 0; a.w = 50; a.h = 50;
+
+        SDL_Rect b = new SDL_Rect();
+        b.x = 50; b.y = 0; b.w = 50; b.h = 50;
+
+        Criatura criatura = new Criatura(0, 0, 1, 0, (byte)255, (byte)255, (byte)255, (byte)255, 1.0);
+        boolean colidiu = criatura.checkCollison(a, b);
+        assertFalse(colidiu); // Fronteira exata: sem sobreposição
+    }
+```
+
+### Testes Estruturais
+
+- Caso de teste para a decisão de quando a quantidade de criaturas for menor
+do que dois
+```java
+public void testQuantidadeCriaturasMenorQue2() {
+    int resultado = ProcessamentoCriaturas.processamento(1, 100); // Valor menor que 2
+    assertEquals(0, resultado, "Deve retornar 0 quando a quantidade de criaturas for menor que 2");
+}
+```
+
+- Caso de teste para a decisão de quando a quantidade de criaturas for maior
+  ou igual a dois
+```java
+public void testQuantidadeCriaturasMaiorOuIgual2() {
+    int resultado = ProcessamentoCriaturas.processamento(2, 100); // Valor igual ou maior que 2
+    assertEquals(1, resultado, "Deve retornar 1 quando a quantidade de criaturas for suficiente");
+}
+```
+- Caso de teste que aborda a decisão quando for falso do método que evita a sobreposição de criaturas 
+```java
+public void testEvitarSobreposicaoSemColisao() {
+        Criatura[] criaturas = new Criatura[2];
+
+        // Criatura 0 em (0, 0)
+        criaturas[0] = new Criatura(0, 0, 0, 0, (byte)255, (byte)0, (byte)0, (byte)255, 0);
+        // Criatura 1 em (200, 200) – longe, sem colisão
+        criaturas[1] = new Criatura(200, 200, 0, 0, (byte)0, (byte)255, (byte)0, (byte)255, 0);
+
+        ProcessamentoCriaturas.evitarSobreposicao(criaturas, 1, new Random());
+
+        // A posição da criatura 1 deve permanecer a mesma
+        assertEquals(200, (int) criaturas[1].getCollisionBox().x);
+        assertEquals(200, (int) criaturas[1].getCollisionBox().y);
+    }
+```
+- Caso de teste que aborda a decisão quando for verdadeira do método que evita a sobreposição de criaturas 
+```java
+public void testEvitarSobreposicaoComColisao() {
+        Criatura[] criaturas = new Criatura[2];
+
+        // Criatura 0 em (100, 100)
+        criaturas[0] = new Criatura(100, 100, 0, 0, (byte)255, (byte)0, (byte)0, (byte)255, 0);
+        // Criatura 1 também em (100, 100) – colisão
+        criaturas[1] = new Criatura(100, 100, 0, 0, (byte)0, (byte)255, (byte)0, (byte)255, 0);
+
+        ProcessamentoCriaturas.evitarSobreposicao(criaturas, 1, new Random(42)); // semente fixa
+
+        // Verifica se houve deslocamento (posX ou posY diferentes de 100)
+        assertTrue(
+                criaturas[1].getCollisionBox().x != 100 ||
+                        criaturas[1].getCollisionBox().y != 100,
+                "A criatura deve ter sido reposicionada para evitar colisão."
+        );
+
+        // Confirma que agora não colidem
+        boolean colisao = criaturas[1].checkCollison(
+                (SDL_Rect) criaturas[0].getCollisionBox(),
+                (SDL_Rect) criaturas[1].getCollisionBox()
+        );
+        assertFalse(colisao, "A criatura deve ter sido reposicionada fora da colisão.");
+    }
+```
+- 
+
 ## 🛠️ Tecnologias Utilizadas
 
 - Linguagem: `Java 22`
 - Bibliotecas:`JUnit`,`libsdl4j`
+
+## Como utilizar
+- Abrir projeto na IDE
+- Executar os seguintes arquivos de teste:
+  - TesteDominio.java
+  - TesteEstrutural.java
+  - TesteFronteira.java
 
