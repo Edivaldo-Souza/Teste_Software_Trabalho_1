@@ -8,7 +8,7 @@ de criaturas saltitantes que roubam moedas entre si ao entrarem em contato.
 - [Descrição](#descrição)
 - [Testes](#Testes)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Como_utilizar](#como-utilizar)
+- [Como Utilizar](#como-utilizar)
 
 ## 📖 Descrição
 
@@ -54,7 +54,7 @@ public void casoSimples(){
 moedas que a criatura rouba é somada ao seu respectivo total de moedas;
 ```java
 public void testReceberMoedasComValorValido() {
-        Criatura criatura = new Criatura(0, 0, 1, 0, (byte)255, (byte)0, (byte)0, (byte)255, 1.5);
+        Criatura criatura = new Criatura(0, 0, 1, 0, (byte)255, (byte)0, (byte)0, (byte)255, 0.5);
         int moedasAntes = criatura.getMoedas();
         criatura.receiveCoins(500);
         assertEquals(moedasAntes + 500, criatura.getMoedas());
@@ -538,9 +538,9 @@ public void testFrameDelayNaoAconteceQuandoFrameTimeMaiorOuIgualFrameDelay() {
 ## 🛠️ Tecnologias Utilizadas
 
 - Linguagem: `Java 22`
-- Bibliotecas:`JUnit`,`libsdl4j`
+- Bibliotecas:`JUnit`,`assertj`,`libsdl4j`
 
-## Como utilizar
+## Como Utilizar
 - Abrir projeto na IDE
 - Executar os seguintes arquivos de teste:
   - TesteDominio.java
