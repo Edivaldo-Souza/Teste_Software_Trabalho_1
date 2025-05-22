@@ -8,7 +8,7 @@ de criaturas saltitantes que roubam moedas entre si ao entrarem em contato.
 - [Descrição](#descrição)
 - [Testes](#Testes)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Como_utilizar](#Como utilizar)
+- [Como_utilizar](#como-utilizar)
 
 ## 📖 Descrição
 
@@ -541,7 +541,7 @@ public void testFrameDelayNaoAconteceQuandoFrameTimeMaiorOuIgualFrameDelay() {
 - Bibliotecas:`JUnit`,`libsdl4j`
 
 ## Como utilizar
-- Abrir projeto na IDE como projeto Maven
+- Abrir projeto na IDE
 - Executar os seguintes arquivos de teste:
   - TesteDominio.java
   - TesteEstrutural.java (100% MC/DC Coverege)
