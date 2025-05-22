@@ -31,7 +31,7 @@ public class TesteEstrutural {
 
     @Test
     public void testQuantidadeCriaturasMaiorQue200() {
-        int resultado = ProcessamentoCriaturas.processamento(200, 100);
+        int resultado = ProcessamentoCriaturas.processamento(201, 100);
         assertEquals(0, resultado, "Deve retornar 0 quando a quantidade de criaturas for maior que 200");
     }
 
@@ -75,6 +75,16 @@ public class TesteEstrutural {
                 (SDL_Rect) criaturas[1].getCollisionBox()
         );
         assertFalse(colisao, "A criatura deve ter sido reposicionada fora da colisão.");
+    }
+
+    //Caso de teste onde o valor aleatório de R seja igual a 0;
+    @Test
+    public void casoValorDeRIgualAZero(){
+        int quantidadeCriaturas = 10;
+        assertTrue(
+                ProcessamentoCriaturas.gerarCriaturas(quantidadeCriaturas, 0)[0].getRandom() != 0,
+                "Mesmo passando como entrada o valor de r para ser igual a 0, " +
+                        "o método gera um novo valor aletório para o mesmo");
     }
 
     @Test
@@ -182,18 +192,10 @@ public class TesteEstrutural {
     @Test
     public void testVerificarSeCriaturaDeveRoubarQuandoNaoHaColisaoEntreCriatuas() {
         Criatura[] criaturas = new Criatura[2];
-        criaturas[0] = new Criatura();
-        criaturas[1] = new Criatura();
-
+        criaturas[0] = new Criatura(100,100,0,0,(byte) 255,(byte) 255,(byte) 255,(byte) 255,0.5);
+        criaturas[1] = new Criatura(200,200,0,0,(byte) 255,(byte) 255,(byte) 255,(byte) 255,0.5);
         //Caso as criaturas não estejam em posição de colidir
-        criaturas[0].setPosX(100);
-        criaturas[0].setPosY(100);
-        criaturas[0].getCollisionBox().w = 50;
-        criaturas[0].getCollisionBox().h = 50;
-        criaturas[1].setPosX(200);
-        criaturas[1].setPosY(200);
-        criaturas[1].getCollisionBox().w = 50;
-        criaturas[1].getCollisionBox().h = 50;
+
         criaturas[1].hasCollision = true;
         boolean criaturaDeveRoubar = false;
 
@@ -208,7 +210,7 @@ public class TesteEstrutural {
         }
         assertFalse(criaturaDeveRoubar);
     }
-    
+
         @Test
     public void testLoopPrincipalComTempoExcedido() {
         // Criaturas que não colidem

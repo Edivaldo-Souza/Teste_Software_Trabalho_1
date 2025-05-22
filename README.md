@@ -80,7 +80,7 @@ public void testPerderMoedasComValorValido() {
 N (número de criaturas) estiver acima do limite de 200 criaturas.
 ```java
 public void casoMaisDe200Criaturas() {
-    assertThat(ProcessamentoCriaturas.processamento(300,60)).isEqualTo(1);
+    assertThat(ProcessamentoCriaturas.processamento(300,60)).isEqualTo(0);
 }
 ```
 
@@ -108,18 +108,6 @@ public void casoMenorTempoDeExecucao() {
     assertThat(ProcessamentoCriaturas.processamento(2, 1)).isEqualTo(0);
 }
 ```
-- Caso o valor aleatório R for igual a zero: Teste que atribuí o valor de zero
-para a variável R e verifica seu tratamento para que o valor seja alterado.
-```java
-public void casoValorDeRIgualAZero(){
-        int quantidadeCriaturas = 10;
-        assertTrue(
-                ProcessamentoCriaturas.gerarCriaturas(quantidadeCriaturas, 0)[0].getRandom() != 0,
-                "Mesmo passando como entrada o valor de r para ser igual a 0, " +
-                "o método gera um novo valor aletório para o mesmo");
-    }
-```
-
 - Caso criatura atinga o limite da tela: Teste que verifica se o sentido da
 do deslocamento da criatura se inverte ao entrar em contato com o limite
 da tela.
@@ -132,7 +120,8 @@ public void testMovimentoNaFronteiraDireita() {
     }
 ```
 
-- Caso de colisão em mesma posição:  
+- Caso de teste que verifica a ausência de colisão entre criaturas que estejam
+a uma distância mínima para colidir
 
 ```java
 public void testColisaoNoLimite() {
@@ -167,6 +156,23 @@ public void testQuantidadeCriaturasMaiorOuIgual2() {
     assertEquals(1, resultado, "Deve retornar 1 quando a quantidade de criaturas for suficiente");
 }
 ```
+
+- Caso que aborda decisão tomada quando a quantidade de criaturas seja menor ou igual a 200
+```java
+public void testQuantidadeCriaturasMenorIgualQue200() {
+        int resultado = ProcessamentoCriaturas.processamento(200, 100);
+        assertEquals(1, resultado, "Deve retornar 1 quando a quantidade de criaturas for menor ou igual que 200");
+    }
+```
+
+- Caso que aborda decisão tomada quando a quantidade de criaturas seja maior que 200 
+```java
+public void testQuantidadeCriaturasMaiorQue200() {
+        int resultado = ProcessamentoCriaturas.processamento(201, 100);
+        assertEquals(0, resultado, "Deve retornar 0 quando a quantidade de criaturas for maior que 200");
+    }
+```
+
 - Caso de teste que aborda a decisão quando for falso do método que evita a sobreposição de criaturas 
 ```java
 public void testEvitarSobreposicaoSemColisao() {
@@ -211,7 +217,323 @@ public void testEvitarSobreposicaoComColisao() {
         assertFalse(colisao, "A criatura deve ter sido reposicionada fora da colisão.");
     }
 ```
-- 
+
+- Caso o valor aleatório R for igual a zero: Teste que atribuí o valor de zero
+  para a variável R e verifica seu tratamento para que o valor seja alterado.
+```java
+public void casoValorDeRIgualAZero(){
+        int quantidadeCriaturas = 10;
+        assertTrue(
+                ProcessamentoCriaturas.gerarCriaturas(quantidadeCriaturas, 0)[0].getRandom() != 0,
+                "Mesmo passando como entrada o valor de r para ser igual a 0, " +
+                "o método gera um novo valor aletório para o mesmo");
+    }
+```
+
+- Caso de teste que aborda a decisão quando a posicão fundo da criatura B for menor que 
+a posição do topo da criatura A
+```java
+public void testVerficarColisaoQuandoFundoDeBForMenorQueTopoDeA(){
+    SDL_Rect rectA = new SDL_Rect();
+    rectA.x = 0; rectA.y = 0; rectA.w = 50; rectA.h = 50;
+    SDL_Rect rectB = new SDL_Rect();
+    rectB.x = 0; rectB.y = 50; rectB.w = 50; rectB.h = 50;
+
+    Criatura criatura = new Criatura();
+    assertFalse(criatura.checkCollison(rectA, rectB));
+}
+```
+
+- Caso de teste que aborda a decisão quando a posicão fundo da criatura A for menor que
+a posição do topo da criatura B
+```java
+public void testVerficarColisaoQuandoFundoDeAForMenorQueTopoDeB(){
+  SDL_Rect rectA = new SDL_Rect();
+  rectA.x = 0; rectA.y = 50; rectA.w = 50; rectA.h = 50;
+  SDL_Rect rectB = new SDL_Rect();
+  rectB.x = 0; rectB.y = 0; rectB.w = 50; rectB.h = 50;
+
+  Criatura criatura = new Criatura();
+  assertFalse(criatura.checkCollison(rectA, rectB));
+}
+```
+
+- Caso de teste que aborda a decisão quando a posicão da borda direita da criatura A for menor que
+a posição da borda esquerda da criatura B
+```java
+public void testVerificarColisaoQuandoDireitaDeAForMenorQueEsquerdaDeB(){
+  SDL_Rect rectA = new SDL_Rect();
+  rectA.x = 0; rectA.y = 0; rectA.w = 50; rectA.h = 50;
+  SDL_Rect rectB = new SDL_Rect();
+  rectB.x = 50; rectB.y = 0; rectB.w = 50; rectB.h = 50;
+
+  Criatura criatura = new Criatura();
+  assertFalse(criatura.checkCollison(rectA, rectB));
+}
+```
+
+- Caso de teste que aborda a decisão quando a posicão da borda direita da criatura B for menor que
+a posição da borda esquerda da criatura A
+```java
+public void testVerificarColisaoQuandoEsquerdaDeAForMaiorQueDireitaDeB(){
+  SDL_Rect rectA = new SDL_Rect();
+  rectA.x = 50; rectA.y = 0; rectA.w = 50; rectA.h = 50;
+  SDL_Rect rectB = new SDL_Rect();
+  rectB.x = 0; rectB.y = 0; rectB.w = 50; rectB.h = 50;
+
+  Criatura criatura = new Criatura();
+  assertFalse(criatura.checkCollison(rectA, rectB));
+}
+```
+- Caso de teste que aborda a decisão quando o valor de i e j são iguais no tratamento
+de quais criaturas devem roubar
+```java
+public void testVerificarSeCriaturaDeveRoubarQuandoIigualJ() {
+        Criatura[] criaturas = new Criatura[1];
+        criaturas[0] = new Criatura();
+        boolean criaturaDeveRoubar = false;
+
+        // i sempre será igual a j
+        for (int i = 0; i < criaturas.length; i++) {
+            for (int j = 0; j < criaturas.length; j++) {
+                if (i != j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
+                        criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
+                    criaturaDeveRoubar = true;
+                }
+            }
+        }
+        assertFalse(criaturaDeveRoubar);
+    }
+```
+
+- Caso de teste que aborda a decisão quando primeira criatura que colida já 
+esteja com status de que já colidiu antes, no tratamento
+de quais criaturas devem roubar
+```java
+public void testVerificarSeCriaturaDeveRoubarQuandoPrimeiraCriaturaJaColidiu() {
+  Criatura[] criaturas = new Criatura[2];
+  criaturas[0] = new Criatura();
+  //Caso a primeira criatura que colida já esteja com status de que já colidiu antes
+  criaturas[0].hasCollision = true;
+  criaturas[1] = new Criatura();
+  boolean criaturaDeveRoubar = false;
+
+  for (int i = 0; i < criaturas.length; i++) {
+    for (int j = 0; j < criaturas.length; j++) {
+      if (i != j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
+              criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
+        criaturaDeveRoubar = true;
+      }
+    }
+  }
+  assertFalse(criaturaDeveRoubar);
+}
+```
+
+- Caso de teste que aborda a decisão quando segunda criatura que colida já
+  esteja com status de que já colidiu antes, no tratamento
+  de quais criaturas devem roubar
+```java
+public void testVerificarSeCriaturaDeveRoubarQuandoSegundaCriaturaJaColidiu() {
+  Criatura[] criaturas = new Criatura[2];
+  criaturas[0] = new Criatura();
+  criaturas[1] = new Criatura();
+  //Caso a segunda criatura que colida já esteja com status de que já colidiu antes
+  criaturas[1].hasCollision = true;
+  boolean criaturaDeveRoubar = false;
+
+  for (int i = 0; i < criaturas.length; i++) {
+    for (int j = 0; j < criaturas.length; j++) {
+      if (i != j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
+              criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
+        criaturaDeveRoubar = true;
+      }
+    }
+  }
+  assertFalse(criaturaDeveRoubar);
+}
+```
+
+- Caso de teste que aborda a decisão quando as criaturas não estão
+  em posição de colidir, no tratamento de quais criaturas devem roubar
+```java
+public void testVerificarSeCriaturaDeveRoubarQuandoNaoHaColisaoEntreCriatuas() {
+  Criatura[] criaturas = new Criatura[2];
+  criaturas[0] = new Criatura(100,100,0,0,(byte) 255,(byte) 255,(byte) 255,(byte) 255,0.5);
+  criaturas[1] = new Criatura(200,200,0,0,(byte) 255,(byte) 255,(byte) 255,(byte) 255,0.5);
+  //Caso as criaturas não estejam em posição de colidir
+
+  criaturas[1].hasCollision = true;
+  boolean criaturaDeveRoubar = false;
+
+
+  for (int i = 0; i < criaturas.length; i++) {
+    for (int j = 0; j < criaturas.length; j++) {
+      if (i != j && !criaturas[i].hasCollision && !criaturas[j].hasCollision &&
+              criaturas[i].checkCollison(criaturas[i].getCollisionBox(), criaturas[j].getCollisionBox())) {
+        criaturaDeveRoubar = true;
+      }
+    }
+  }
+  assertFalse(criaturaDeveRoubar);
+}
+```
+
+- Caso de teste que aborda a decisão quando o tempo de execução da simulação
+se execede.
+```java
+public void testLoopPrincipalComTempoExcedido() {
+        // Criaturas que não colidem
+        Criatura c1 = new Criatura() {
+            @Override
+            public void move() {}
+            @Override
+            public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 10; r.h = 10;
+                return r;
+            }
+            @Override
+            public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura c2 = new Criatura() {
+            @Override
+            public void move() {}
+            @Override
+            public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 1000; r.y = 1000; r.w = 10; r.h = 10;
+                return r;
+            }
+            @Override
+            public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura[] criaturas = new Criatura[]{c1, c2};
+
+        int tempoExecucao = 1;
+
+        int resultado = loopPrincipal(null, criaturas, tempoExecucao);
+        assertEquals(0, resultado);
+    }
+```
+
+- Caso de teste que aborda a decisão quando o tempo de execução da simulação
+  não se execede.
+```java
+public void testLoopPrincipalSemTempoExcedido() {
+        Criatura c1 = new Criatura() {
+            @Override
+            public void move() {}
+            @Override
+            public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 10; r.h = 10;
+                return r;
+            }
+            @Override
+            public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura c2 = new Criatura() {
+            @Override
+            public void move() {}
+            @Override
+            public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 10; r.h = 10;
+                return r;
+            }
+            @Override
+            public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura[] criaturas = new Criatura[]{c1, c2};
+
+        int tempoExecucao = 10;
+
+        int resultado = loopPrincipal(null, criaturas, tempoExecucao);
+        assertEquals(1, resultado);
+    }
+```
+- Caso de teste que aborda a decisão quando o tempo de um iteração (FrameTime) é menor
+que o tempo de espera entre as iterações(FrameDelay)
+```java
+public void testFrameDelayQuandoFrameTimeEhMenorQueFrameDelay() {
+        long inicio = System.currentTimeMillis();
+
+        Criatura c1 = new Criatura() {
+            @Override public void move() {}
+            @Override public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 50; r.h = 50;
+                return r;
+            }
+            @Override public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura c2 = new Criatura() {
+            @Override public void move() {}
+            @Override public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 50; r.h = 50;
+                return r;
+            }
+            @Override public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura[] criaturas = new Criatura[]{c1, c2};
+
+        int tempoExecucao = 1;
+        loopPrincipal(null, criaturas, tempoExecucao);
+
+        long duracao = System.currentTimeMillis() - inicio;
+
+        // O loop deve ter demorado pelo menos 1000 ms (por causa do SDL_Delay dentro do tempo)
+        assertTrue(duracao >= 1000);
+    }
+```
+
+- Caso de teste que aborda a decisão quando o tempo de um iteração (FrameTime) é maior
+  ou igual ao tempo de espera entre as iterações (FrameDelay)
+```java
+public void testFrameDelayNaoAconteceQuandoFrameTimeMaiorOuIgualFrameDelay() {
+  Criatura c1 = new Criatura() {
+    @Override public void move() {
+      try { Thread.sleep(20); } catch (InterruptedException e) {}
+    }
+    @Override public SDL_Rect getCollisionBox() {
+      SDL_Rect r = new SDL_Rect();
+      r.x = 0; r.y = 0; r.w = 50; r.h = 50;
+      return r;
+    }
+    @Override public void render(SDL_Renderer renderer) {}
+  };
+
+  Criatura c2 = new Criatura() {
+    @Override public void move() {
+      try { Thread.sleep(20); } catch (InterruptedException e) {}
+    }
+    @Override public SDL_Rect getCollisionBox() {
+      SDL_Rect r = new SDL_Rect();
+      r.x = 0; r.y = 0; r.w = 50; r.h = 50;
+      return r;
+    }
+    @Override public void render(SDL_Renderer renderer) {}
+  };
+
+  Criatura[] criaturas = new Criatura[]{c1, c2};
+
+  long inicio = System.currentTimeMillis();
+  int tempoExecucao = 1;
+  loopPrincipal(null, criaturas, tempoExecucao);
+  long duracao = System.currentTimeMillis() - inicio;
+
+  // O tempo total ainda deve ser de no mínimo 1000ms (tempoExecucao)
+  assertTrue(duracao >= 1000);
+}
+```
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -219,9 +541,9 @@ public void testEvitarSobreposicaoComColisao() {
 - Bibliotecas:`JUnit`,`libsdl4j`
 
 ## Como utilizar
-- Abrir projeto na IDE
+- Abrir projeto na IDE como projeto Maven
 - Executar os seguintes arquivos de teste:
   - TesteDominio.java
-  - TesteEstrutural.java
+  - TesteEstrutural.java (100% MC/DC Coverege)
   - TesteFronteira.java
 

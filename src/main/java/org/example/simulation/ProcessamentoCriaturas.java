@@ -92,10 +92,10 @@ public class ProcessamentoCriaturas {
         boolean getAnotherRandomNumber = true;
 
         while(getAnotherRandomNumber){
-            randomNumber = random.nextDouble(-1, 1);
             if(randomNumber!=0){
                 getAnotherRandomNumber = false;
             }
+            randomNumber = random.nextDouble(-1, 1);
         }
 
         for (int i = 0; i < quantidade; i++) {
@@ -138,6 +138,7 @@ public class ProcessamentoCriaturas {
     }
 
     public static int loopPrincipal(SDL_Renderer renderer, Criatura[] criaturas, int tempoExecucao) {
+        SDL_Event evt = new SDL_Event();
         boolean shouldRun = true;
         int frameTime, frameStart;
         int notRobbedCreatures = criaturas.length;
@@ -145,6 +146,10 @@ public class ProcessamentoCriaturas {
         while (shouldRun) {
             frameStart = SDL_GetTicks();
 
+            while (SDL_PollEvent(evt) != 0) {
+                switch (evt.type) {
+                }
+            }
 
             for (Criatura c : criaturas) {
                 c.move();

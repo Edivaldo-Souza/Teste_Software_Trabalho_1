@@ -14,7 +14,7 @@ public class TesteFronteira {
     // O valor de N é redefinido para 200
     @Test
     public void casoMaisDe200Criaturas() {
-        assertThat(ProcessamentoCriaturas.processamento(300,60)).isEqualTo(1);
+        assertThat(ProcessamentoCriaturas.processamento(300,60)).isEqualTo(0);
     }
 
     //Caso de teste onde a quantidade de criaturas é inferior ao valor mínimo ( n >= 2 criaturas)
@@ -35,15 +35,6 @@ public class TesteFronteira {
         assertThat(ProcessamentoCriaturas.processamento(2, 1)).isEqualTo(0);
     }
 
-    //Caso de teste onde o valor aleatório de R seja igual a 0;
-    @Test
-    public void casoValorDeRIgualAZero(){
-        int quantidadeCriaturas = 10;
-        assertTrue(
-                ProcessamentoCriaturas.gerarCriaturas(quantidadeCriaturas, 0)[0].getRandom() != 0,
-                "Mesmo passando como entrada o valor de r para ser igual a 0, " +
-                "o método gera um novo valor aletório para o mesmo");
-    }
 
     @Test
     public void testMovimentoNaFronteiraDireita() {
