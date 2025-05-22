@@ -1,10 +1,12 @@
 import io.github.libsdl4j.api.rect.SDL_Rect;
+import io.github.libsdl4j.api.render.SDL_Renderer;
 import org.example.criatura.Criatura;
 import org.example.simulation.ProcessamentoCriaturas;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
+import static org.example.simulation.ProcessamentoCriaturas.loopPrincipal;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TesteEstrutural {
@@ -118,6 +120,152 @@ public class TesteEstrutural {
         Criatura criatura = new Criatura();
         assertFalse(criatura.checkCollison(rectA, rectB));
     }
+
+    @Test
+    public void testLoopPrincipalComTempoExcedido() {
+        // Criaturas que não colidem
+        Criatura c1 = new Criatura() {
+            @Override
+            public void move() {}
+            @Override
+            public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 10; r.h = 10;
+                return r;
+            }
+            @Override
+            public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura c2 = new Criatura() {
+            @Override
+            public void move() {}
+            @Override
+            public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 1000; r.y = 1000; r.w = 10; r.h = 10;
+                return r;
+            }
+            @Override
+            public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura[] criaturas = new Criatura[]{c1, c2};
+
+        int tempoExecucao = 1;
+
+        int resultado = loopPrincipal(null, criaturas, tempoExecucao);
+        assertEquals(0, resultado);
+    }
+
+    @Test
+    public void testLoopPrincipalSemTempoExcedido() {
+        Criatura c1 = new Criatura() {
+            @Override
+            public void move() {}
+            @Override
+            public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 10; r.h = 10;
+                return r;
+            }
+            @Override
+            public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura c2 = new Criatura() {
+            @Override
+            public void move() {}
+            @Override
+            public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 10; r.h = 10;
+                return r;
+            }
+            @Override
+            public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura[] criaturas = new Criatura[]{c1, c2};
+
+        int tempoExecucao = 10;
+
+        int resultado = loopPrincipal(null, criaturas, tempoExecucao);
+        assertEquals(1, resultado);
+    }
+
+    @Test
+    public void testFrameDelayQuandoFrameTimeEhMenorQueFrameDelay() {
+        long inicio = System.currentTimeMillis();
+
+        Criatura c1 = new Criatura() {
+            @Override public void move() {}
+            @Override public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 50; r.h = 50;
+                return r;
+            }
+            @Override public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura c2 = new Criatura() {
+            @Override public void move() {}
+            @Override public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 50; r.h = 50;
+                return r;
+            }
+            @Override public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura[] criaturas = new Criatura[]{c1, c2};
+
+        int tempoExecucao = 1;
+        loopPrincipal(null, criaturas, tempoExecucao);
+
+        long duracao = System.currentTimeMillis() - inicio;
+
+        // O loop deve ter demorado pelo menos 1000 ms (por causa do SDL_Delay dentro do tempo)
+        assertTrue(duracao >= 1000);
+    }
+
+    @Test
+    public void testFrameDelayNaoAconteceQuandoFrameTimeMaiorOuIgualFrameDelay() {
+        Criatura c1 = new Criatura() {
+            @Override public void move() {
+                try { Thread.sleep(20); } catch (InterruptedException e) {}
+            }
+            @Override public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 50; r.h = 50;
+                return r;
+            }
+            @Override public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura c2 = new Criatura() {
+            @Override public void move() {
+                try { Thread.sleep(20); } catch (InterruptedException e) {}
+            }
+            @Override public SDL_Rect getCollisionBox() {
+                SDL_Rect r = new SDL_Rect();
+                r.x = 0; r.y = 0; r.w = 50; r.h = 50;
+                return r;
+            }
+            @Override public void render(SDL_Renderer renderer) {}
+        };
+
+        Criatura[] criaturas = new Criatura[]{c1, c2};
+
+        long inicio = System.currentTimeMillis();
+        int tempoExecucao = 1;
+        loopPrincipal(null, criaturas, tempoExecucao);
+        long duracao = System.currentTimeMillis() - inicio;
+
+        // O tempo total ainda deve ser de no mínimo 1000ms (tempoExecucao)
+        assertTrue(duracao >= 1000);
+    }
+
 
 }
 

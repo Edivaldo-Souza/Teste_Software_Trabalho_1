@@ -137,7 +137,7 @@ public class ProcessamentoCriaturas {
         }
     }
 
-    private static int loopPrincipal(SDL_Renderer renderer, Criatura[] criaturas,int tempoExecucao) {
+    public static int loopPrincipal(SDL_Renderer renderer, Criatura[] criaturas, int tempoExecucao) {
         boolean shouldRun = true;
         int frameTime, frameStart;
         int notRobbedCreatures = criaturas.length;
